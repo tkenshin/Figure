@@ -8,22 +8,27 @@ public class ObjCutting : MonoBehaviour {
 
 	private MeshFilter mf;
 	private bool isCut = false;
-	private List<float> thetaArray = new List<float>();
 
 	private Vector3 tapPoint;
 	private Vector3[] cubeVerPos;
 	private List<Vector3> baseVerPos = new List<Vector3>();
 	private List<Vector3> cutPointArray = new List<Vector3>();
-	private List<Vector3> horizontalPosArray = new List<Vector3>();
+	private List<Vector3> screenPointArray = new List<Vector3>();
 
-
-	float CalculationLeg(Vector3 cutPoint, Vector3 horizontalPoint, float th)
+	private float rot2Dir(float radian)
 	{
-		float dis = Vector3.Distance(cutPoint, horizontalPoint);
+		return radian * 180 / Mathf.PI;
 
-		float leg = dis * Mathf.Tan(th);
+	}
 
-		return leg;
+	private float AngleCalculation(List<Vector3> sp)
+	{
+		float b = Vector2.Distance(sp[1], sp[2]);
+
+		float a = Vector2.Distance(sp[0], sp[2]);
+
+		return Mathf.Atan(a / b);
+
 	}
 
 	void Start () {
@@ -79,25 +84,6 @@ public class ObjCutting : MonoBehaviour {
 
 				cutPointArray.Add(cutPoint.transform.position);
 
-
-				GameObject cameraPos = new GameObject("CameraPosOBJ");
-				cameraPos.transform.position = mainCamera.transform.position;
-
-				GameObject horizontalOBJ = new GameObject("CameraHorizontalOBJ");
-				horizontalOBJ.transform.position = new Vector3(cameraPos.transform.position.x, simpleCube.transform.position.y, cameraPos.transform.position.z);
-
-
-				float b = Vector3.Distance(cameraPos.transform.position, horizontalOBJ.transform.position);
-
-				float a = Vector3.Distance(horizontalOBJ.transform.position, simpleCube.transform.position);
-
-				float theta = Mathf.Atan(b / a) * (cameraPos.transform.position.y < 0 ? 1 : -1);
-
-				thetaArray.Add(theta);
-
-				Destroy(horizontalOBJ);
-				Destroy(cameraPos);
-
 				if (cutPointArray.Count == 2)
 				{
 					isCut = true;
@@ -108,62 +94,22 @@ public class ObjCutting : MonoBehaviour {
 
 		if (cutPointArray.Count == 2 && isCut)
 		{
-			if (cutPointArray[0].z == cutPointArray[1].z)
+			screenPointArray.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
+			screenPointArray.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+			screenPointArray.Add(new Vector3(screenPointArray[0].x, screenPointArray[1].y, screenPointArray[0].z));
+
+			for (var i = 0; i < screenPointArray.Count; i++)
 			{
-				if (cutPointArray[0].z < 0) // 正面
-				{
-					Debug.Log("正面");
-					for (var i = 0; i < cutPointArray.Count; i++) 
-					{
-						GameObject horizontalOBJ = new GameObject("HorizontalOBJ");
-						horizontalOBJ.transform.position = new Vector3(cutPointArray[i].x, cutPointArray[i].y, -cutPointArray[i].z);
-
-						float leg = CalculationLeg(cutPointArray[i], horizontalOBJ.transform.position, thetaArray[i]);
-
-						GameObject obj = new GameObject("HiddenPoint[" + i + "]");
-						obj.transform.position = new Vector3(horizontalOBJ.transform.position.x, horizontalOBJ.transform.position.y + leg, horizontalOBJ.transform.position.z);
-
-						Destroy(horizontalOBJ);
-
-					}
-
-				}
-				else // 裏面
-				{
-					Debug.Log("裏面");
-					for (var i = 0; i < cutPointArray.Count; i++)
-					{
-						//GameObject horizontalOBJ = new GameObject("HorizontalPos");
-						//horizontalOBJ.transform.position = new Vector3(cutPointArray[i].x, cutPointArray[i].y, -cutPointArray[i].z);
-
-						//horizontalPosArray.Add(horizontalOBJ.transform.position￥５a);
-
-
-					}
-
-
-				}
-
-			}
-			else if (cutPointArray[0].x == cutPointArray[1].x)
-			{
-				if (cutPointArray[0].x > 0) // 右面
-				{
-					Debug.Log("右面");
-
-				}
-				else
-				{
-					Debug.Log("左面");
-
-
-				}
+				Debug.Log("screenPointArray [" + i + "] = " + screenPointArray[i]);
 
 
 			}
+
+			float a = rot2Dir(AngleCalculation(screenPointArray));
+			Debug.Log("a = " + a);
+			Debug.Log("ac = " + AngleCalculation(screenPointArray));
 
 			isCut = false;
-
 		}
 	}
 }
