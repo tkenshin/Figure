@@ -69,6 +69,7 @@ public class ObjCutting : MonoBehaviour {
 	private List<Vector3> baseVerPos = new List<Vector3>();
 	private List<Vector3> cutPointArray = new List<Vector3>();
 	private List<Vector3> screenPoint = new List<Vector3>();
+    private List<GameObject> screenPointOBJ = new List<GameObject>();
 
 	private float rot2Dir(float radian)
 	{
@@ -152,17 +153,22 @@ public class ObjCutting : MonoBehaviour {
 		{
 			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
 			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
-			//screenPoint.Sort(new Vector3Comparer());
 
-			for (var i = 0; i < screenPoint.Count; i++)
+            //screenPoint.Sort(new Vector3Comparer());
+
+            for (var i = 0; i < screenPoint.Count; i++)
 			{
-				Debug.Log("screePoint[" + i + "] = " + screenPoint[i]);
+                screenPointOBJ.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
+                screenPointOBJ[i].transform.position = screenPoint[i];
+                screenPointOBJ[i].transform.localScale = new Vector3(20, 20, 20);
+
+                Debug.Log("screePoint[" + i + "] = " + screenPoint[i]);
 
 			}
 
-			if (Physics.Linecast(cutPointArray[0], cutPointArray[1])) 
+			if (Physics.Linecast(screenPoint[0], screenPoint[1])) 
 			{
-				
+                Debug.Log("IEI");
 
 			}
 
