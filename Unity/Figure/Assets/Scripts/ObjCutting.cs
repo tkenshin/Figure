@@ -1,10 +1,65 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+class Vector3Comparer : IComparer<Vector3>
+{
+	public int Compare(Vector3 a, Vector3 b)
+	{
+		if (a.y > b.y)
+		{
+			return -1;
+
+		}
+		else if (Mathf.Approximately(a.y, b.y))
+		{
+			if (a.x > b.x)
+			{
+				return 0;
+
+			}
+			else if (Mathf.Approximately(a.x, b.x))
+			{
+				if (a.z > b.z)
+				{
+					return 0;
+
+				}
+				else if (Mathf.Approximately(a.z, b.z))
+				{
+					return 0;
+
+				}
+				else
+				{
+					return 0;
+
+				}
+
+			}
+			else
+			{
+				return 0;
+
+			}
+
+		}
+		else
+		{
+			return 0;
+
+		}
+
+	}
+
+}
 
 public class ObjCutting : MonoBehaviour {
 
-	public GameObject simpleCube;
-	public Camera mainCamera;
+	[SerializeField]
+	private GameObject simpleCube;
+	[SerializeField]
+	private Camera mainCamera;
 
 	private MeshFilter mf;
 	private bool isCut = false;
@@ -13,7 +68,7 @@ public class ObjCutting : MonoBehaviour {
 	private Vector3[] cubeVerPos;
 	private List<Vector3> baseVerPos = new List<Vector3>();
 	private List<Vector3> cutPointArray = new List<Vector3>();
-	private List<Vector3> screenPointArray = new List<Vector3>();
+	private List<Vector3> screenPoint = new List<Vector3>();
 
 	private float rot2Dir(float radian)
 	{
@@ -62,7 +117,7 @@ public class ObjCutting : MonoBehaviour {
 	}
 
 	void Update () {
-		if (Input.GetMouseButtonDown(0))
+		if (Input.GetMouseButtonUp(0))
 		{
 
 			Vector3 mousePos = Input.mousePosition;
@@ -83,6 +138,7 @@ public class ObjCutting : MonoBehaviour {
 				cutPoint.transform.localScale = new Vector3(10, 10, 10);
 
 				cutPointArray.Add(cutPoint.transform.position);
+				Destroy(hit.collider);
 
 				if (cutPointArray.Count == 2)
 				{
@@ -94,23 +150,30 @@ public class ObjCutting : MonoBehaviour {
 
 		if (cutPointArray.Count == 2 && isCut)
 		{
-			screenPointArray.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
-			screenPointArray.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
-			screenPointArray.Add(new Vector3(screenPointArray[0].x, screenPointArray[1].y, screenPointArray[0].z));
+			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
+			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+			//screenPoint.Sort(new Vector3Comparer());
 
-			for (var i = 0; i < screenPointArray.Count; i++)
+			for (var i = 0; i < screenPoint.Count; i++)
 			{
-				Debug.Log("screenPointArray [" + i + "] = " + screenPointArray[i]);
-
+				Debug.Log("screePoint[" + i + "] = " + screenPoint[i]);
 
 			}
 
-			float a = rot2Dir(AngleCalculation(screenPointArray));
-			Debug.Log("a = " + a);
-			Debug.Log("ac = " + AngleCalculation(screenPointArray));
+			if (Physics.Linecast(cutPointArray[0], cutPointArray[1])) 
+			{
+				
+
+			}
+
+			//float a = rot2Dir(AngleCalculation(screenPoint));
+			//Debug.Log("a = " + a);
+			//Debug.Log("ac = " + AngleCalculation(screenPoint));
+
 
 			isCut = false;
 		}
+
 	}
 }
 
