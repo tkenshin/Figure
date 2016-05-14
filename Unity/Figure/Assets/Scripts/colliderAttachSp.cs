@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 
 public class colliderAttachSp : MonoBehaviour {
-    
+
     [SerializeField]
-	private GameObject simpleCube;
+    private GameObject simpleCube = new GameObject("Cube");
     [SerializeField]
     private int boxColSize = 5;
 
@@ -66,7 +66,7 @@ public class colliderAttachSp : MonoBehaviour {
 			col.Add(obj[i].AddComponent<BoxCollider>());
 			col[i].size = size[i];
 			obj[i].transform.position = center[i];
-			obj[i].transform.rotation = rotation[i];
+			obj[i].transform.rotation = angle[i];
 
 			obj[i].transform.parent = gameObject.transform;
 
