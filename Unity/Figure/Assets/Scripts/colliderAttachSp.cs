@@ -70,7 +70,6 @@ public class colliderAttachSp : MonoBehaviour {
 
 			obj[i].transform.parent = gameObject.transform;
 
-
 		}
 
 	}

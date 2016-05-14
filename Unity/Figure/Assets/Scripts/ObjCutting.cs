@@ -1,58 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-
-class Vector3Comparer : IComparer<Vector3>
-{
-	public int Compare(Vector3 a, Vector3 b)
-	{
-		if (a.y > b.y)
-		{
-			return -1;
-
-		}
-		else if (Mathf.Approximately(a.y, b.y))
-		{
-			if (a.x > b.x)
-			{
-				return 0;
-
-			}
-			else if (Mathf.Approximately(a.x, b.x))
-			{
-				if (a.z > b.z)
-				{
-					return 0;
-
-				}
-				else if (Mathf.Approximately(a.z, b.z))
-				{
-					return 0;
-
-				}
-				else
-				{
-					return 0;
-
-				}
-
-			}
-			else
-			{
-				return 0;
-
-			}
-
-		}
-		else
-		{
-			return 0;
-
-		}
-
-	}
-
-}
 
 public class ObjCutting : MonoBehaviour {
 
@@ -70,22 +17,6 @@ public class ObjCutting : MonoBehaviour {
 	private List<Vector3> cutPointArray = new List<Vector3>();
 	private List<Vector3> screenPoint = new List<Vector3>();
     private List<GameObject> screenPointOBJ = new List<GameObject>();
-
-	private float rot2Dir(float radian)
-	{
-		return radian * 180 / Mathf.PI;
-
-	}
-
-	private float AngleCalculation(List<Vector3> sp)
-	{
-		float b = Vector2.Distance(sp[1], sp[2]);
-
-		float a = Vector2.Distance(sp[0], sp[2]);
-
-		return Mathf.Atan(a / b);
-
-	}
 
 	void Start () {
 		var CubeVertices = new GameObject("CubeVertices");
@@ -154,8 +85,6 @@ public class ObjCutting : MonoBehaviour {
 			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
 			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
 
-            //screenPoint.Sort(new Vector3Comparer());
-
             for (var i = 0; i < screenPoint.Count; i++)
 			{
                 screenPointOBJ.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
@@ -171,11 +100,6 @@ public class ObjCutting : MonoBehaviour {
                 Debug.Log("IEI");
 
 			}
-
-			//float a = rot2Dir(AngleCalculation(screenPoint));
-			//Debug.Log("a = " + a);
-			//Debug.Log("ac = " + AngleCalculation(screenPoint));
-
 
 			isCut = false;
 		}
