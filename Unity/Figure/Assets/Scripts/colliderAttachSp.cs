@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class colliderAttachSp : MonoBehaviour {
 
     [SerializeField]
-    private GameObject simpleCube = new GameObject("Cube");
+    private GameObject simpleCube;
     [SerializeField]
     private int boxColSize = 5;
 
@@ -96,7 +96,6 @@ public class colliderAttachSp : MonoBehaviour {
 
 	}
 	
-	// Update is called once per frame
 	void Update () {
 	
 	}
