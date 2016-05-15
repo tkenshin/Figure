@@ -50,16 +50,16 @@ public class ObjCutting : MonoBehaviour {
 		}
 
 		// Debug ===============================================================================
-		for (var i = 0; i < baseVerPos.Count; i++)
-		{
-			GameObject verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
-			verSphere.transform.localScale = new Vector3(10, 10, 10);
-			verSphere.name = "CubeVertice[" + i + "]";
-			verSphere.transform.parent = CubeVertices.transform;
-			Debug.Log(baseVerPos[i]);
+		//for (var i = 0; i < baseVerPos.Count; i++)
+		//{
+		//	GameObject verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		//	verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
+		//	verSphere.transform.localScale = new Vector3(10, 10, 10);
+		//	verSphere.name = "CubeVertice[" + i + "]";
+		//	verSphere.transform.parent = CubeVertices.transform;
+		//	Debug.Log(baseVerPos[i]);
 
-		}
+		//}
 		// ======================================================================================
 
 	}
@@ -76,8 +76,6 @@ public class ObjCutting : MonoBehaviour {
 			{
 				tapPoint = hit.point;
 
-				Debug.Log("HIT!");
-
 				GameObject cutPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				cutPoint.transform.position = tapPoint;
 				cutPoint.transform.parent = hit.transform;
@@ -85,7 +83,7 @@ public class ObjCutting : MonoBehaviour {
 				cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
 				cutPoint.transform.localScale = new Vector3(10, 10, 10);
 
-                cutPointArray.Add(cutPoint.transform.localPosition);
+                cutPointArray.Add(cutPoint.transform.position);
 				Destroy(hit.collider);
 
 				if (cutPointArray.Count == 2)
@@ -103,7 +101,7 @@ public class ObjCutting : MonoBehaviour {
             RaycastHit hit = new RaycastHit();
             if (Physics.Linecast(screenPoint[0], screenPoint[1], out hit))
             {
-                Debug.Log("ColHit");
+                Debug.Log(hit.collider);
 
             }
 
