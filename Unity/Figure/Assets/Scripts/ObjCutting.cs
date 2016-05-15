@@ -5,7 +5,6 @@ public class ObjCutting : MonoBehaviour {
 
 	[SerializeField]
 	private GameObject simpleCube;
-	[SerializeField]
 	private Camera mainCamera;
 
 	private MeshFilter mf;
@@ -17,6 +16,23 @@ public class ObjCutting : MonoBehaviour {
 	private List<Vector3> cutPointArray = new List<Vector3>();
 	private List<Vector3> screenPoint = new List<Vector3>();
     private List<GameObject> screenPointOBJ = new List<GameObject>();
+
+    private void Awake()
+    {
+        if(mainCamera == null)
+        {
+            mainCamera = Camera.main;
+
+        }
+
+        if(simpleCube == null)
+        {
+            simpleCube = GameObject.Find("simpleCube");
+
+
+        }
+
+    }
 
 	void Start () {
 		var CubeVertices = new GameObject("CubeVertices");
@@ -69,42 +85,31 @@ public class ObjCutting : MonoBehaviour {
 				cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
 				cutPoint.transform.localScale = new Vector3(10, 10, 10);
 
-				cutPointArray.Add(cutPoint.transform.position);
+                cutPointArray.Add(cutPoint.transform.localPosition);
 				Destroy(hit.collider);
 
 				if (cutPointArray.Count == 2)
 				{
-					isCut = true;
-				}
+                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
+                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+
+                    isCut = true;
+                }
 
 			}
 		}
+        if (isCut)
+        {
+            RaycastHit hit = new RaycastHit();
+            if (Physics.Linecast(screenPoint[0], screenPoint[1], out hit))
+            {
+                Debug.Log("ColHit");
 
-		if (cutPointArray.Count == 2 && isCut)
-		{
-			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
-			screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+            }
 
-            for (var i = 0; i < screenPoint.Count; i++)
-			{
-                screenPointOBJ.Add(GameObject.CreatePrimitive(PrimitiveType.Sphere));
-                screenPointOBJ[i].transform.position = screenPoint[i];
-                screenPointOBJ[i].transform.localScale = new Vector3(20, 20, 20);
+        }
 
-                Debug.Log("screePoint[" + i + "] = " + screenPoint[i]);
-
-			}
-
-			if (Physics.Linecast(screenPoint[0], screenPoint[1])) 
-			{
-                Debug.Log("IEI");
-
-			}
-
-			isCut = false;
-		}
-
-	}
+    }
 }
 
 

@@ -58,7 +58,7 @@ public class colliderAttachSp : MonoBehaviour {
 
     }
 
-	private void CreateCollider(Vector3[] size, Vector3[] center, Quaternion[] angle, List<BoxCollider> col)
+	private void CreateColliders(Vector3[] size, Vector3[] center, Quaternion[] angle, List<BoxCollider> col)
 	{
 		for (var i = 0; i < size.Length; i++)
 		{
@@ -90,7 +90,7 @@ public class colliderAttachSp : MonoBehaviour {
 		}
 
 		// AddToList (col.size, col.center, target collider);
-		CreateCollider(GetColliderSize(boxColSize), GetColliderCenter(simpleCube.transform), GetColliderAngle(), boxColArray);	// target collider
+		CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(simpleCube.transform), GetColliderAngle(), boxColArray);	// target collider
 
 
 	}
