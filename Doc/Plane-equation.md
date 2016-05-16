@@ -3,6 +3,10 @@
 
 ![3点を含む平面の式](http://i.imgur.com/nneJVqN.gif)
 
+このサイトから引用させていただきました。
+
+<http://keisan.casio.jp/exec/system/1202458197>
+
     Vector3 A = cutPointArray[0]; // 切断点(1) 
     Vector3 B = cutPointArray[1]; // 切断点(2) 
     Vector3 C = cutPointArray[2]; // 切断点(3) 
