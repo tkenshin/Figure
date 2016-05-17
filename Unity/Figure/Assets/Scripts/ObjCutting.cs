@@ -14,8 +14,10 @@ public class ObjCutting : MonoBehaviour {
 	private Vector3[] cubeVerPos;
 	private List<Vector3> baseVerPos = new List<Vector3>();
 	private List<Vector3> cutPointArray = new List<Vector3>();
-	private List<Vector3> screenPoint = new List<Vector3>();
+	private List<Transform> cutTransArray = new List<Transform>();
     private List<GameObject> screenPointOBJ = new List<GameObject>();
+
+	private Plane plane;
 
     private void Awake()
     {
@@ -72,7 +74,7 @@ public class ObjCutting : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(mousePos);
 			RaycastHit hit = new RaycastHit();
 
-			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 2)
+			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 3)
 			{
 				tapPoint = hit.point;
 
@@ -84,30 +86,64 @@ public class ObjCutting : MonoBehaviour {
 				cutPoint.transform.localScale = new Vector3(10, 10, 10);
 
                 cutPointArray.Add(cutPoint.transform.position);
+				cutTransArray.Add(cutPoint.transform);
 				Destroy(hit.collider);
 
-				if (cutPointArray.Count == 2)
+				if (cutPointArray.Count == 3)
 				{
-                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
-                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+					//screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
+					//screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));	
 
-                    isCut = true;
+
+					isCut = true;
+
+					Vector3 A = cutPointArray[0];
+					Vector3 B = cutPointArray[1];
+					Vector3 C = cutPointArray[2];
+
+					Vector3 AB = new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
+					Vector3 AC = new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
+
+					Vector3 ABxAC = new Vector3(AB.y * AC.z - AC.y * AB.z,
+												AB.z * AC.x - AC.z * AB.x,
+												AB.x * AC.y - AC.x * AB.y);
+
+
+					Vector3 P = new Vector3(ABxAC.x, ABxAC.y, ABxAC.z);
+
+
+
+					Debug.Log(P.x + "x " + P.y + "y " + P.z + "z = " + (P.x + P.y + P.z));
+
+
+
+					// ax + by + cz + d = 0
+
+					//float f = a * cutPointArray[0].x + b * cutPointArray[0].y + c * cutPointArray[0].z;
+
+					//Debug.Log("f = " + f);
+
+					//Debug.Log("a+b+c = " + (a + b + c));
+					//Debug.Log("a+b+c+d = " + (a + b + c + d));
+
+
                 }
 
 			}
 		}
         if (isCut)
         {
-            RaycastHit hit = new RaycastHit();
-            if (Physics.Linecast(screenPoint[0], screenPoint[1], out hit))
-            {
-                Debug.Log(hit.collider);
+            //RaycastHit hit = new RaycastHit();
+            //if (Physics.Linecast(screenPoint[0], screenPoint[1], out hit))
+            //{
+            //    Debug.Log(hit.collider);
 
-            }
+            //}
 
         }
 
     }
+
 }
 
 
