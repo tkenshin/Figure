@@ -72,7 +72,7 @@ public class ObjCutting : MonoBehaviour {
 			Ray ray = Camera.main.ScreenPointToRay(mousePos);
 			RaycastHit hit = new RaycastHit();
 
-			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 2)
+			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 3)
 			{
 				tapPoint = hit.point;
 
@@ -86,12 +86,50 @@ public class ObjCutting : MonoBehaviour {
                 cutPointArray.Add(cutPoint.transform.position);
 				Destroy(hit.collider);
 
-				if (cutPointArray.Count == 2)
+				if (cutPointArray.Count == 3)
 				{
-                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
-                    screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+                    Debug.Log(cutPointArray[0]);
+                    Debug.Log(cutPointArray[1]);
+                    Debug.Log(cutPointArray[2]);
 
-                    isCut = true;
+                    Vector3 A = cutPointArray[0];
+                    Vector3 B = cutPointArray[1];
+                    Vector3 C = cutPointArray[2];
+
+                    Vector3 AB = new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
+                    Vector3 AC = new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
+
+                    float a = (B.y - A.y) * (C.z - A.z) - (C.y - A.y) * (B.z - A.z);
+                    float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
+                    //Debug.Log(" (B.z - A.z) = " + (B.z - A.z));
+                    //Debug.Log("C.x = " + C.x + "A.x = " + A.x);
+                    //Debug.Log(" (C.x - A.x) = " + (C.x - (A.x)));
+                    //Debug.Log(" (B.z - A.z) * (C.x - A.x) = " + (B.z - A.z) * (C.x - A.x));
+
+                    //Debug.Log(" (C.z - A.z) = " + (C.z - A.z));
+                    //Debug.Log(" (B.x - A.x) = " + (B.x - A.x));
+                    //Debug.Log(" (C.z - A.z) * (B.x - A.x) = " + (C.z - A.z) * (B.x - A.x));
+
+
+                    float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+
+                    float d = -(a * A.x + b * A.y + c * A.z);
+
+                    Vector3 ABxAC = new Vector3(a, b, c);
+
+                    Debug.Log("a = " + a);
+                    Debug.Log("b = " + b);
+                    Debug.Log("c = " + c);
+                    Debug.Log("d = " + d);
+
+                    Debug.Log("Q = " + (a + b + c + d));
+
+
+                    //screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
+                    //screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
+
+                    //isCut = true;
+
                 }
 
 			}
