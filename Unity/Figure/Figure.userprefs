@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ObjCutting.cs">
     <Files>
@@ -12,4 +13,33 @@
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+=======
+﻿<Properties>
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/plane.cs">
+    <Files>
+      <File FileName="Assets/Scripts/colliderAttachSp.cs" Line="15" Column="57" />
+      <File FileName="Assets/Scripts/ObjCutting.cs" Line="116" Column="76" />
+      <File FileName="Assets/Scripts/ListTest.cs" Line="11" Column="3" />
+      <File FileName="Assets/Scripts/rotateCamera.cs" Line="68" Column="5" />
+      <File FileName="Assets/plane.cs" Line="8" Column="2" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Figure" expanded="True">
+            <Node name="Assembly-CSharp" expanded="True">
+              <Node name="Scripts" expanded="True" />
+              <Node name="plane.cs" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+>>>>>>> origin/master
 </Properties>
