@@ -14,35 +14,6 @@ public class rotateCamera : MonoBehaviour
 	public bool isAutoRotation = true;
 	public bool cameraMode = false;
 
-	//public void autoRotation()
-	//{
-	//	if (isAutoRotation)
-	//	{
-	//		isAutoRotation = false;
-
-	//	}
-	//	else if (!isAutoRotation)
-	//	{
-	//		isAutoRotation = true;
-
-	//	}
-
-	//}
-
-	//public void modeChange()
-	//{
-	//	if (cameraMode)
-	//	{
-	//		cameraMode = false;
-
-	//	}
-	//	else if (!cameraMode)
-	//	{
-	//		cameraMode = true;
-
-	//	}
-	//}
-
 	void Start()
 	{
 	}

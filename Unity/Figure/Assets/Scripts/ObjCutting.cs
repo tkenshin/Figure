@@ -5,9 +5,9 @@ public class ObjCutting : MonoBehaviour {
 
 	[SerializeField]
 	private GameObject cube;
-	private Camera mainCamera;
+    private Camera mainCamera;
 
-	private MeshFilter mf;
+    private MeshFilter mf;
 	private bool isCut = false;
 
 	private Vector3 tapPoint;
@@ -47,28 +47,28 @@ public class ObjCutting : MonoBehaviour {
 		mf = cube.GetComponent<MeshFilter>();
 		cubeVerPos = mf.mesh.vertices;
 
-		foreach (var v in cubeVerPos)
-		{
-			if (!baseVerPos.Contains(v))
-			{
-				baseVerPos.Add(v);
-
-			}
-
-		}
-
-        // Debug ===============================================================================
-        for (var i = 0; i < baseVerPos.Count; i++)
+        foreach (var v in cubeVerPos)
         {
-            var verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
-            verSphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            verSphere.name = "CubeVertice[" + i + "]";
-            verSphere.transform.parent = CubeVertices.transform;
-            Debug.Log(baseVerPos[i]);
+            if (!baseVerPos.Contains(v))
+            {
+                baseVerPos.Add(v);
+
+            }
 
         }
-        // ======================================================================================
+
+        //// Debug ===============================================================================
+        //for (var i = 0; i < baseVerPos.Count; i++)
+        //{
+        //    var verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        //    verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
+        //    verSphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        //    verSphere.name = "CubeVertice[" + i + "]";
+        //    verSphere.transform.parent = CubeVertices.transform;
+        //    Debug.Log(baseVerPos[i]);
+
+        //}
+        //// ======================================================================================
 
     }
 
@@ -96,35 +96,52 @@ public class ObjCutting : MonoBehaviour {
 
 				if (cutPointArray.Count == 3)
 				{
-                    Debug.Log(cutPointArray[0]);
-                    Debug.Log(cutPointArray[1]);
-                    Debug.Log(cutPointArray[2]);
+                    //Debug.Log(cutPointArray[0]);
+                    //Debug.Log(cutPointArray[1]);
+                    //Debug.Log(cutPointArray[2]);
 
-                    var A = cutPointArray[0];
-                    var B = cutPointArray[1];
-                    var C = cutPointArray[2];
+                    var cutPoint_01 = cutPointArray[0];
+                    var cutPoint_02 = cutPointArray[1];
+                    var cutPoint_03 = cutPointArray[2];
 
-                    var n = GetCrossProduct(A, B, C);
+                    var cutPlaneNV = GetCrossProduct(cutPoint_01, cutPoint_02, cutPoint_03);
 
                     var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    obj.transform.position = n;
+                    obj.transform.position = cutPlaneNV;
                     obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                    obj.name = "CutPlaneNormalVector";
 
+                    // 6,4,5, 0,1,2, 3,2,1, 7,5,2, 4,1,2, 0,6,7
+
+                    int[,] verticesNo = new int[,]
+                    {
+                        { 6,0,3,7,4,0 },
+                        { 4,1,2,5,1,6 },
+                        { 5,4,1,2,2,7 }
+
+                    };
+
+                    for(var i = 0; i < verticesNo.Length / 3; i++)
+                    {
+                        var cubeVertices_01 = baseVerPos[verticesNo[0, i]];
+                        var cubeVertices_02 = baseVerPos[verticesNo[1, i]];
+                        var cubeVertices_03 = baseVerPos[verticesNo[2, i]];
+
+                        var cubePlaneNV = GetCrossProduct(cubeVertices_01, cubeVertices_02, cubeVertices_03);
+
+                        var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                        obj02.transform.position = cubePlaneNV;
+                        obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                        obj02.name = "CubePlaneNormalVector";
+
+                    }
 
                 }
 
 			}
+
 		}
-        if (isCut)
-        {
-            RaycastHit hit = new RaycastHit();
-            if (Physics.Linecast(screenPoint[0], screenPoint[1], out hit))
-            {
-                Debug.Log(hit.collider);
-
-            }
-
-        }
 
     }
+
 }
