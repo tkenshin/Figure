@@ -13,6 +13,10 @@ public class Intercept : MonoBehaviour {
 
 	private Vector3 pd01;
 	private Vector3 pd02;
+	private Vector3 pt;
+
+	private float d01;
+	private float d02;
 
     private List<Vector3> plane01Vertices = new List<Vector3>();
     private List<Vector3> plane02Vertices = new List<Vector3>();
@@ -77,7 +81,7 @@ public class Intercept : MonoBehaviour {
             float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
             float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
 
-            float d = -(a * A.x + b * A.y + c * A.z);
+			d01 = -(a * A.x + b * A.y + c * A.z);
 
 			pd01 = new Vector3(a, b, c);
 
@@ -90,7 +94,7 @@ public class Intercept : MonoBehaviour {
             Debug.Log(a + "x + " + b + "y + " + c + "z");
 
 			Debug.Log("n = " + pd01);
-            Debug.Log("d = " + d);
+            Debug.Log("d = " + d01);
 
         }
 
@@ -111,7 +115,7 @@ public class Intercept : MonoBehaviour {
             float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
             float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
 
-            float d = -(a * A.x + b * A.y + c * A.z);
+			d02 = -(a * A.x + b * A.y + c * A.z);
 
 			var aa = B - A;
 			var cc = C - A;
@@ -125,7 +129,7 @@ public class Intercept : MonoBehaviour {
             verSp02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
 			Debug.Log("n = " + pd02);
-            Debug.Log("d = " + d);
+            Debug.Log("d = " + d02);
 
 
         }
@@ -135,7 +139,7 @@ public class Intercept : MonoBehaviour {
 
 			// pd01 (a1, b1, c1)
 			// pd02 (a2, b2, c2)
-			// e = [ b1 c2 - c1 b2, c1 a2 - a1 c2, a1 b2 - b1 a2 ]
+			// e = (b1 c2 - c1 b2, c1 a2 - a1 c2, a1 b2 - b1 a2)
 			float Ex = pd01.y * pd02.z - pd01.z * pd02.y;
 			float Ey = pd01.z * pd02.x - pd01.x * pd02.z;
 			float Ez = pd01.x * pd02.y - pd01.y * pd02.x;
@@ -147,6 +151,32 @@ public class Intercept : MonoBehaviour {
 			obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
 			Debug.Log("e = " + e);
+			if (0 != e.z)
+			{
+				pt.x = (d01 * pd02.y - d02 * pd01.y) / Ez;
+				pt.y = (d01 * pd02.x - d02 * pd01.x) / (-Ez);
+				pt.z = 0;
+
+			}
+			if (0 != e.y)
+			{
+				pt.x = (d01 * pd02.z - d02 * pd01.z) / (-Ey);
+				pt.y = 0;
+				pt.z = (d01 * pd02.x - d02 * pd01.x) / Ey;
+
+			}
+
+			if (0 != e.x)
+			{
+				pt.x = 0;
+				pt.y = (d01 * pd02.z - d02 * pd01.z) / Ex;
+				pt.z = (d01 * pd02.y - d02 * pd01.y) / (-Ex);
+
+			}
+
+			var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			obj02.transform.position = pt;
+			obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
 		}
 
