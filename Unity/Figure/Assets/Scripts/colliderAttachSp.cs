@@ -4,9 +4,8 @@ using System.Collections.Generic;
 public class colliderAttachSp : MonoBehaviour {
 
     [SerializeField]
-    private GameObject simpleCube;
-    [SerializeField]
-    private int boxColSize = 5;
+    private GameObject cube;
+    private float boxColSize = 0.05f;
 
     private MeshFilter mf;
 	private Vector3[] cubeVerPos;
@@ -15,7 +14,7 @@ public class colliderAttachSp : MonoBehaviour {
 	private List<Vector3> baseVerPos = new List<Vector3>();
 	private List<BoxCollider> boxColArray = new List<BoxCollider>();
 
-    private Vector3[] GetColliderSize(int size)
+    private Vector3[] GetColliderSize(float size)
     {
         return new Vector3[]
         {
@@ -75,7 +74,7 @@ public class colliderAttachSp : MonoBehaviour {
 	}
 
 	void Start () {
-		mf = simpleCube.GetComponent<MeshFilter>();
+		mf = cube.GetComponent<MeshFilter>();
 		cubeVerPos = mf.mesh.vertices;
 
 
@@ -90,7 +89,7 @@ public class colliderAttachSp : MonoBehaviour {
 		}
 
 		// AddToList (col.size, col.center, target collider);
-		CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(simpleCube.transform), GetColliderAngle(), boxColArray);	// target collider
+		CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(cube.transform), GetColliderAngle(), boxColArray);	// target collider
 
 
 	}

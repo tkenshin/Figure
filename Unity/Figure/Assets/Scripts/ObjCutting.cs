@@ -4,7 +4,7 @@ using System.Collections.Generic;
 public class ObjCutting : MonoBehaviour {
 
 	[SerializeField]
-	private GameObject simpleCube;
+	private GameObject cube;
 	private Camera mainCamera;
 
 	private MeshFilter mf;
@@ -17,6 +17,14 @@ public class ObjCutting : MonoBehaviour {
 	private List<Vector3> screenPoint = new List<Vector3>();
     private List<GameObject> screenPointOBJ = new List<GameObject>();
 
+    private Vector3 GetCrossProduct(Vector3 A, Vector3 B, Vector3 C)
+    {
+        var AB = B - A;
+        var AC = C - A;
+
+        return Vector3.Cross(AB, AC);
+    }
+
     private void Awake()
     {
         if(mainCamera == null)
@@ -25,9 +33,9 @@ public class ObjCutting : MonoBehaviour {
 
         }
 
-        if(simpleCube == null)
+        if(cube == null)
         {
-            simpleCube = GameObject.Find("simpleCube");
+            cube = GameObject.Find("cube");
 
 
         }
@@ -36,7 +44,7 @@ public class ObjCutting : MonoBehaviour {
 
 	void Start () {
 		var CubeVertices = new GameObject("CubeVertices");
-		mf = simpleCube.GetComponent<MeshFilter>();
+		mf = cube.GetComponent<MeshFilter>();
 		cubeVerPos = mf.mesh.vertices;
 
 		foreach (var v in cubeVerPos)
@@ -49,39 +57,39 @@ public class ObjCutting : MonoBehaviour {
 
 		}
 
-		// Debug ===============================================================================
-		//for (var i = 0; i < baseVerPos.Count; i++)
-		//{
-		//	GameObject verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		//	verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
-		//	verSphere.transform.localScale = new Vector3(10, 10, 10);
-		//	verSphere.name = "CubeVertice[" + i + "]";
-		//	verSphere.transform.parent = CubeVertices.transform;
-		//	Debug.Log(baseVerPos[i]);
+        // Debug ===============================================================================
+        for (var i = 0; i < baseVerPos.Count; i++)
+        {
+            var verSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            verSphere.transform.position = new Vector3(baseVerPos[i].x, baseVerPos[i].y, baseVerPos[i].z);
+            verSphere.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            verSphere.name = "CubeVertice[" + i + "]";
+            verSphere.transform.parent = CubeVertices.transform;
+            Debug.Log(baseVerPos[i]);
 
-		//}
-		// ======================================================================================
+        }
+        // ======================================================================================
 
-	}
+    }
 
 	void Update () {
 		if (Input.GetMouseButtonUp(0))
 		{
 
-			Vector3 mousePos = Input.mousePosition;
-			Ray ray = Camera.main.ScreenPointToRay(mousePos);
-			RaycastHit hit = new RaycastHit();
+			var mousePos = Input.mousePosition;
+			var ray = Camera.main.ScreenPointToRay(mousePos);
+			var hit = new RaycastHit();
 
 			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 3)
 			{
 				tapPoint = hit.point;
 
-				GameObject cutPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+				var cutPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				cutPoint.transform.position = tapPoint;
 				cutPoint.transform.parent = hit.transform;
 				cutPoint.transform.localRotation = new Quaternion(0, 0, 0, 0);
 				cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
-				cutPoint.transform.localScale = new Vector3(10, 10, 10);
+				cutPoint.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
                 cutPointArray.Add(cutPoint.transform.position);
 				Destroy(hit.collider);
@@ -92,43 +100,16 @@ public class ObjCutting : MonoBehaviour {
                     Debug.Log(cutPointArray[1]);
                     Debug.Log(cutPointArray[2]);
 
-                    Vector3 A = cutPointArray[0];
-                    Vector3 B = cutPointArray[1];
-                    Vector3 C = cutPointArray[2];
+                    var A = cutPointArray[0];
+                    var B = cutPointArray[1];
+                    var C = cutPointArray[2];
 
-                    Vector3 AB = new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
-                    Vector3 AC = new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
+                    var n = GetCrossProduct(A, B, C);
 
-                    float a = (B.y - A.y) * (C.z - A.z) - (C.y - A.y) * (B.z - A.z);
-                    float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
-                    //Debug.Log(" (B.z - A.z) = " + (B.z - A.z));
-                    //Debug.Log("C.x = " + C.x + "A.x = " + A.x);
-                    //Debug.Log(" (C.x - A.x) = " + (C.x - (A.x)));
-                    //Debug.Log(" (B.z - A.z) * (C.x - A.x) = " + (B.z - A.z) * (C.x - A.x));
+                    var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    obj.transform.position = n;
+                    obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-                    //Debug.Log(" (C.z - A.z) = " + (C.z - A.z));
-                    //Debug.Log(" (B.x - A.x) = " + (B.x - A.x));
-                    //Debug.Log(" (C.z - A.z) * (B.x - A.x) = " + (C.z - A.z) * (B.x - A.x));
-
-
-                    float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
-
-                    float d = -(a * A.x + b * A.y + c * A.z);
-
-                    Vector3 ABxAC = new Vector3(a, b, c);
-
-                    Debug.Log("a = " + a);
-                    Debug.Log("b = " + b);
-                    Debug.Log("c = " + c);
-                    Debug.Log("d = " + d);
-
-                    Debug.Log("Q = " + (a + b + c + d));
-
-
-                    //screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[0]));
-                    //screenPoint.Add(mainCamera.WorldToScreenPoint(cutPointArray[1]));
-
-                    //isCut = true;
 
                 }
 
