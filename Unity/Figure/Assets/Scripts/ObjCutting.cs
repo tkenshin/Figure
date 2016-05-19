@@ -1,20 +1,21 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class ObjCutting : MonoBehaviour {
+public class ObjCutting : MonoBehaviour
+{
 
-	[SerializeField]
-	private GameObject cube;
+    [SerializeField]
+    private GameObject cube;
     private Camera mainCamera;
 
     private MeshFilter mf;
-	private bool isCut = false;
+    private bool isCut = false;
 
-	private Vector3 tapPoint;
-	private Vector3[] cubeVerPos;
-	private List<Vector3> baseVerPos = new List<Vector3>();
-	private List<Vector3> cutPointArray = new List<Vector3>();
-	private List<Vector3> screenPoint = new List<Vector3>();
+    private Vector3 tapPoint;
+    private Vector3[] cubeVerPos;
+    private List<Vector3> baseVerPos = new List<Vector3>();
+    private List<Vector3> cutPointArray = new List<Vector3>();
+    private List<Vector3> screenPoint = new List<Vector3>();
     private List<GameObject> screenPointOBJ = new List<GameObject>();
 
     private Vector3 GetCrossProduct(Vector3 A, Vector3 B, Vector3 C)
@@ -27,13 +28,13 @@ public class ObjCutting : MonoBehaviour {
 
     private void Awake()
     {
-        if(mainCamera == null)
+        if (mainCamera == null)
         {
             mainCamera = Camera.main;
 
         }
 
-        if(cube == null)
+        if (cube == null)
         {
             cube = GameObject.Find("cube");
 
@@ -42,10 +43,11 @@ public class ObjCutting : MonoBehaviour {
 
     }
 
-	void Start () {
-		var CubeVertices = new GameObject("CubeVertices");
-		mf = cube.GetComponent<MeshFilter>();
-		cubeVerPos = mf.mesh.vertices;
+    void Start()
+    {
+        var CubeVertices = new GameObject("CubeVertices");
+        mf = cube.GetComponent<MeshFilter>();
+        cubeVerPos = mf.mesh.vertices;
 
         foreach (var v in cubeVerPos)
         {
@@ -72,30 +74,31 @@ public class ObjCutting : MonoBehaviour {
 
     }
 
-	void Update () {
-		if (Input.GetMouseButtonUp(0))
-		{
+    void Update()
+    {
+        if (Input.GetMouseButtonUp(0))
+        {
 
-			var mousePos = Input.mousePosition;
-			var ray = Camera.main.ScreenPointToRay(mousePos);
-			var hit = new RaycastHit();
+            var mousePos = Input.mousePosition;
+            var ray = Camera.main.ScreenPointToRay(mousePos);
+            var hit = new RaycastHit();
 
-			if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 3)
-			{
-				tapPoint = hit.point;
+            if (Physics.Raycast(ray, out hit, 100000) && cutPointArray.Count < 3)
+            {
+                tapPoint = hit.point;
 
-				var cutPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-				cutPoint.transform.position = tapPoint;
-				cutPoint.transform.parent = hit.transform;
-				cutPoint.transform.localRotation = new Quaternion(0, 0, 0, 0);
-				cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
-				cutPoint.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                var cutPoint = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                cutPoint.transform.position = tapPoint;
+                cutPoint.transform.parent = hit.transform;
+                cutPoint.transform.localRotation = new Quaternion(0, 0, 0, 0);
+                cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
+                cutPoint.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
                 cutPointArray.Add(cutPoint.transform.position);
-				Destroy(hit.collider);
+                Destroy(hit.collider);
 
-				if (cutPointArray.Count == 3)
-				{
+                if (cutPointArray.Count == 3)
+                {
                     //Debug.Log(cutPointArray[0]);
                     //Debug.Log(cutPointArray[1]);
                     //Debug.Log(cutPointArray[2]);
@@ -121,7 +124,7 @@ public class ObjCutting : MonoBehaviour {
 
                     };
 
-                    for(var i = 0; i < verticesNo.Length / 3; i++)
+                    for (var i = 0; i < verticesNo.Length / 3; i++)
                     {
                         var cubeVertices_01 = baseVerPos[verticesNo[0, i]];
                         var cubeVertices_02 = baseVerPos[verticesNo[1, i]];
@@ -138,9 +141,9 @@ public class ObjCutting : MonoBehaviour {
 
                 }
 
-			}
+            }
 
-		}
+        }
 
     }
 
