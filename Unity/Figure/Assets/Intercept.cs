@@ -70,16 +70,18 @@ public class Intercept : MonoBehaviour {
             // PlaneVertex_01 = B
             // PlaneVertex_02 = C
 
-            Vector3 A = plane01Vertices[0];
-            Vector3 B = plane01Vertices[1];
-            Vector3 C = plane01Vertices[2];
+            var A = plane01Vertices[0];
+            var B = plane01Vertices[1];
+            var C = plane01Vertices[2];
 
-			Vector3 AB = B - A;//new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
-			Vector3 AC = C - A;//new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
+			var AB = B - A; //new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
+			var AC = C - A; //new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
 
             float a = (B.y - A.y) * (C.z - A.z) - (C.y - A.y) * (B.z - A.z);
             float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
             float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
+
+			var
 
 			d01 = -(a * A.x + b * A.y + c * A.z);
 
@@ -104,7 +106,7 @@ public class Intercept : MonoBehaviour {
             // PlaneVertex_01 = B
             // PlaneVertex_02 = C
 
-            Vector3 A = plane02Vertices[0];
+			var A = plane02Vertices[0];
             Vector3 B = plane02Vertices[1];
             Vector3 C = plane02Vertices[2];
 
