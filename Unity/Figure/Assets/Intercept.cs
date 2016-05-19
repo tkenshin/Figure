@@ -11,6 +11,9 @@ public class Intercept : MonoBehaviour {
     private MeshFilter mf01;
     private MeshFilter mf02;
 
+	private Vector3 pd01;
+	private Vector3 pd02;
+
     private List<Vector3> plane01Vertices = new List<Vector3>();
     private List<Vector3> plane02Vertices = new List<Vector3>();
 
@@ -67,28 +70,26 @@ public class Intercept : MonoBehaviour {
             Vector3 B = plane01Vertices[1];
             Vector3 C = plane01Vertices[2];
 
-            Vector3 AB = new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
-            Vector3 AC = new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
+			Vector3 AB = B - A;//new Vector3(B.x - A.x, B.y - A.y, B.z - A.z);
+			Vector3 AC = C - A;//new Vector3(C.x - A.x, C.y - A.y, C.z - A.z);
 
-            //Vector3 n = new Vector3(AB.x * AC.x, AB.y * AC.y, AB.z * AC.z);
             float a = (B.y - A.y) * (C.z - A.z) - (C.y - A.y) * (B.z - A.z);
             float b = (B.z - A.z) * (C.x - A.x) - (C.z - A.z) * (B.x - A.x);
             float c = (B.x - A.x) * (C.y - A.y) - (C.x - A.x) * (B.y - A.y);
 
             float d = -(a * A.x + b * A.y + c * A.z);
 
-            Vector3 n = new Vector3(a, b, c);
-
+			pd01 = new Vector3(a, b, c);
 
             GameObject verSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            verSp.transform.position = n;
+			verSp.transform.position = pd01;
             verSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
             // ax + by + cz + d = 0;
 
             Debug.Log(a + "x + " + b + "y + " + c + "z");
 
-            Debug.Log("n = " + n);
+			Debug.Log("n = " + pd01);
             Debug.Log("d = " + d);
 
         }
@@ -112,17 +113,42 @@ public class Intercept : MonoBehaviour {
 
             float d = -(a * A.x + b * A.y + c * A.z);
 
-			Vector3 n = new Vector3(a, b, c);
+			var aa = B - A;
+			var cc = C - A;
+			var vv = Vector3.Cross(aa, cc);
+
+			//pd02 = new Vector3(a, b, c);
+			pd02 = vv;
 
             GameObject verSp02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            verSp02.transform.position = n;
+			verSp02.transform.position = pd02;
             verSp02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-            Debug.Log("n = " + n);
+			Debug.Log("n = " + pd02);
             Debug.Log("d = " + d);
 
 
         }
+
+		if (Input.GetKeyDown(KeyCode.Backspace))
+		{
+
+			// pd01 (a1, b1, c1)
+			// pd02 (a2, b2, c2)
+			// e = [ b1 c2 - c1 b2, c1 a2 - a1 c2, a1 b2 - b1 a2 ]
+			float Ex = pd01.y * pd02.z - pd01.z * pd02.y;
+			float Ey = pd01.z * pd02.x - pd01.x * pd02.z;
+			float Ez = pd01.x * pd02.y - pd01.y * pd02.x;
+
+			Vector3 e = new Vector3(Ex, Ey, Ez);
+
+			var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			obj.transform.position = e;
+			obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+
+			Debug.Log("e = " + e);
+
+		}
 
     }
 }
