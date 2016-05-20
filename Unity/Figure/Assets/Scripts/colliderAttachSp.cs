@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class colliderAttachSp : MonoBehaviour {
+public class colliderAttachSp : MonoBehaviour
+{
 
     [SerializeField]
     private GameObject cube;
     private float boxColSize = 0.05f;
 
     private MeshFilter mf;
-	private Vector3[] cubeVerPos;
+    private Vector3[] cubeVerPos;
 
-	private List<GameObject> obj = new List<GameObject>();
-	private List<Vector3> baseVerPos = new List<Vector3>();
-	private List<BoxCollider> boxColArray = new List<BoxCollider>();
+    private List<GameObject> obj = new List<GameObject>();
+    private List<Vector3> baseVerPos = new List<Vector3>();
+    private List<BoxCollider> boxColArray = new List<BoxCollider>();
 
     private Vector3[] GetColliderSize(float size)
     {
@@ -57,45 +58,47 @@ public class colliderAttachSp : MonoBehaviour {
 
     }
 
-	private void CreateColliders(Vector3[] size, Vector3[] center, Quaternion[] angle, List<BoxCollider> col)
-	{
-		for (var i = 0; i < size.Length; i++)
-		{
-			obj.Add(new GameObject("BoxCollider[" + i + "]"));
-			col.Add(obj[i].AddComponent<BoxCollider>());
-			col[i].size = size[i];
-			obj[i].transform.position = center[i];
-			obj[i].transform.rotation = angle[i];
+    private void CreateColliders(Vector3[] size, Vector3[] center, Quaternion[] angle, List<BoxCollider> col)
+    {
+        for (var i = 0; i < size.Length; i++)
+        {
+            obj.Add(new GameObject("BoxCollider[" + i + "]"));
+            col.Add(obj[i].AddComponent<BoxCollider>());
+            col[i].size = size[i];
+            obj[i].transform.position = center[i];
+            obj[i].transform.rotation = angle[i];
 
-			obj[i].transform.parent = gameObject.transform;
+            obj[i].transform.parent = gameObject.transform;
 
-		}
+        }
 
-	}
+    }
 
-	void Start () {
-		mf = cube.GetComponent<MeshFilter>();
-		cubeVerPos = mf.mesh.vertices;
-
-
-		foreach (var v in cubeVerPos)
-		{
-			if (!baseVerPos.Contains(v))
-			{
-				baseVerPos.Add(v);
-
-			}
-
-		}
-
-		// AddToList (col.size, col.center, target collider);
-		CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(cube.transform), GetColliderAngle(), boxColArray);	// target collider
+    void Start()
+    {
+        mf = cube.GetComponent<MeshFilter>();
+        cubeVerPos = mf.mesh.vertices;
 
 
-	}
-	
-	void Update () {
-	
-	}
+        foreach (var v in cubeVerPos)
+        {
+            if (!baseVerPos.Contains(v))
+            {
+                baseVerPos.Add(v);
+
+            }
+
+        }
+
+        // AddToList (col.size, col.center, target collider);
+        CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(cube.transform), GetColliderAngle(), boxColArray);   // target collider
+
+
+    }
+
+    void Update()
+    {
+
+    }
 
 }

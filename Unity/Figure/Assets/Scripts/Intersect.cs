@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class Intersect : MonoBehaviour {
+public class Intersect : MonoBehaviour
+{
 
     [SerializeField]
     private GameObject plane01;
@@ -11,12 +12,12 @@ public class Intersect : MonoBehaviour {
     private MeshFilter mf01;
     private MeshFilter mf02;
 
-	private Vector3 pd01;
-	private Vector3 pd02;
-	private Vector3 pt;
+    private Vector3 pd01;
+    private Vector3 pd02;
+    private Vector3 pt;
 
-	private float d01;
-	private float d02;
+    private float d01;
+    private float d02;
 
     private List<Vector3> plane01Vertices = new List<Vector3>();
     private List<Vector3> plane02Vertices = new List<Vector3>();
@@ -42,7 +43,8 @@ public class Intersect : MonoBehaviour {
         return false;
     }
 
-    void Start () {
+    void Start()
+    {
         mf01 = plane01.GetComponent<MeshFilter>();
         mf02 = plane02.GetComponent<MeshFilter>();
 
@@ -68,24 +70,25 @@ public class Intersect : MonoBehaviour {
 
         }
 
-		for (var i = 0; i < plane02Vertices.Count - 1; i++)
-		{
-			GameObject verSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			verSp.transform.position = plane02Vertices[i];
-			verSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+        for (var i = 0; i < plane02Vertices.Count - 1; i++)
+        {
+            GameObject verSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            verSp.transform.position = plane02Vertices[i];
+            verSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-			verSp.name = "Plane02Vertex[" + i + "]";
+            verSp.name = "Plane02Vertex[" + i + "]";
 
-			Debug.Log("Plane02Vertex[" + i + "]" + plane02Vertices[i]);
+            Debug.Log("Plane02Vertex[" + i + "]" + plane02Vertices[i]);
 
-		}
+        }
 
     }
 
 
-	void Update () {
+    void Update()
+    {
         // Plane01
-        if(Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Return))
         {
             // PlaneVertex_00 = A
             // PlaneVertex_01 = B
@@ -101,21 +104,21 @@ public class Intersect : MonoBehaviour {
             d01 = -(pd01.x * A.x + pd01.y * A.y + pd01.z * A.z);
 
             var verSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			verSp.transform.position = pd01;
+            verSp.transform.position = pd01;
             verSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-			Debug.Log("n = " + pd01);
+            Debug.Log("n = " + pd01);
             Debug.Log("d = " + d01);
 
         }
 
-        if(Input.GetKeyDown(KeyCode.Space))
-		{
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
             // PlaneVertex_00 = A
             // PlaneVertex_01 = B
             // PlaneVertex_02 = C
 
-			var A = plane02Vertices[0];
+            var A = plane02Vertices[0];
             var B = plane02Vertices[1];
             var C = plane02Vertices[2];
 
@@ -125,17 +128,17 @@ public class Intersect : MonoBehaviour {
             d02 = -(pd02.x * A.x + pd02.y * A.y + pd02.z * A.z);
 
             GameObject verSp02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			verSp02.transform.position = pd02;
+            verSp02.transform.position = pd02;
             verSp02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-			Debug.Log("n = " + pd02);
+            Debug.Log("n = " + pd02);
             Debug.Log("d = " + d02);
 
 
         }
 
-		if (Input.GetKeyDown(KeyCode.Backspace))
-		{
+        if (Input.GetKeyDown(KeyCode.Backspace))
+        {
 
             // pd01 (a1, b1, c1)
             // pd02 (a2, b2, c2)
@@ -148,41 +151,41 @@ public class Intersect : MonoBehaviour {
             //Vector3 e = new Vector3(Ex, Ey, Ez);
             var e = Vector3.Cross(pd01, pd02);
 
-			var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			obj.transform.position = e;
-			obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            obj.transform.position = e;
+            obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
-			Debug.Log("e = " + e);
-			if (0 != e.z)
-			{
-				pt.x = (d01 * pd02.y - d02 * pd01.y) / e.z;
-				pt.y = (d01 * pd02.x - d02 * pd01.x) / (-e.z);
-				pt.z = 0;
+            Debug.Log("e = " + e);
+            if (0 != e.z)
+            {
+                pt.x = (d01 * pd02.y - d02 * pd01.y) / e.z;
+                pt.y = (d01 * pd02.x - d02 * pd01.x) / (-e.z);
+                pt.z = 0;
 
-			}
-			if (0 != e.y)
-			{
-				pt.x = (d01 * pd02.z - d02 * pd01.z) / (-e.y);
-				pt.y = 0;
-				pt.z = (d01 * pd02.x - d02 * pd01.x) / e.y;
+            }
+            if (0 != e.y)
+            {
+                pt.x = (d01 * pd02.z - d02 * pd01.z) / (-e.y);
+                pt.y = 0;
+                pt.z = (d01 * pd02.x - d02 * pd01.x) / e.y;
 
-			}
+            }
 
-			if (0 != e.x)
-			{
-				pt.x = 0;
-				pt.y = (d01 * pd02.z - d02 * pd01.z) / e.x;
-				pt.z = (d01 * pd02.y - d02 * pd01.y) / (-e.x);
+            if (0 != e.x)
+            {
+                pt.x = 0;
+                pt.y = (d01 * pd02.z - d02 * pd01.z) / e.x;
+                pt.z = (d01 * pd02.y - d02 * pd01.y) / (-e.x);
 
-			}
+            }
 
-			var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			obj02.transform.position = pt;
-			obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            obj02.transform.position = pt;
+            obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 
             Debug.Log("pt = " + pt);
 
-		}
+        }
 
     }
 }
