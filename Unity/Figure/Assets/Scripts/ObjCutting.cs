@@ -92,7 +92,7 @@ public class ObjCutting : MonoBehaviour
                 cutPoint.transform.parent = hit.transform;
                 cutPoint.transform.localRotation = new Quaternion(0, 0, 0, 0);
                 cutPoint.transform.localPosition = new Vector3(0, cutPoint.transform.localPosition.y, 0);
-                cutPoint.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+                cutPoint.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
 
                 cutPointArray.Add(cutPoint.transform.position);
                 Destroy(hit.collider);
