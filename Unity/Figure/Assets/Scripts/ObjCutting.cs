@@ -137,6 +137,9 @@ public class ObjCutting : MonoBehaviour
 
                 if (cutPointArray.Count == 3)
                 {
+                    var directionalVectors = new GameObject("DirectionalVectors");
+                    var cubePlaneNormalVectors = new GameObject("CubePlaneNormalVectors");
+
                     //Debug.Log(cutPointArray[0]);
                     //Debug.Log(cutPointArray[1]);
                     //Debug.Log(cutPointArray[2]);
@@ -176,6 +179,7 @@ public class ObjCutting : MonoBehaviour
                         obj02.transform.position = cubePlaneNV;
                         obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
                         obj02.name = "CubePlaneNormalVector";
+                        obj02.transform.parent = cubePlaneNormalVectors.transform;
 
 						constant_02 = -(cubePlaneNV.x * cubeVertices_01.x +
 										cubePlaneNV.y * cubeVertices_01.y +
@@ -187,6 +191,7 @@ public class ObjCutting : MonoBehaviour
 						obj03.transform.position = e;
 						obj03.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 						obj03.name = "DirectionalVector";
+                        obj03.transform.parent = directionalVectors.transform;
 
 						if (IntersectionLine(e, cubePlaneNV, cutPlaneNV, constant_01, constant_02))
 						{
