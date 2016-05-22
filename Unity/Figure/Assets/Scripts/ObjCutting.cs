@@ -9,8 +9,8 @@ public class ObjCutting : MonoBehaviour
     private Camera mainCamera;
 
 	private MeshFilter mf;
-	private static float constant_01;
 	private static float constant_02;
+    private static float constant_01;
 
     private Vector3 tapPoint;
 	private Vector3 pt;
@@ -139,6 +139,7 @@ public class ObjCutting : MonoBehaviour
                 {
                     var directionalVectors = new GameObject("DirectionalVectors");
                     var cubePlaneNormalVectors = new GameObject("CubePlaneNormalVectors");
+                    var intesectPoint = new GameObject("IntesectPoints");
 
                     //Debug.Log(cutPointArray[0]);
                     //Debug.Log(cutPointArray[1]);
@@ -155,7 +156,8 @@ public class ObjCutting : MonoBehaviour
                     obj.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
                     obj.name = "CutPlaneNormalVector";
 
-					constant_01 = -(cutPlaneNV.x * cutPoint_01.x + cutPlaneNV.y * cutPoint_01.y + cutPlaneNV.z * cutPoint_01.z);
+                    constant_01 = -(cutPlaneNV.x * cutPoint_01.x + cutPlaneNV.y * cutPoint_01.y + cutPlaneNV.z * cutPoint_01.z);
+                    Debug.Log(cutPlaneNV.x + cutPlaneNV.y + cutPlaneNV.z + constant_01);
 
                     // 6,4,5, 0,1,2, 3,2,1, 7,5,2, 4,1,2, 0,6,7
 
@@ -181,9 +183,11 @@ public class ObjCutting : MonoBehaviour
                         obj02.name = "CubePlaneNormalVector";
                         obj02.transform.parent = cubePlaneNormalVectors.transform;
 
-						constant_02 = -(cubePlaneNV.x * cubeVertices_01.x +
-										cubePlaneNV.y * cubeVertices_01.y +
-										cubePlaneNV.z * cubeVertices_01.z);
+                        constant_02 = -(cubePlaneNV.x * cubeVertices_01.x +
+                                        cubePlaneNV.y * cubeVertices_01.y +
+                                        cubePlaneNV.z * cubeVertices_01.z);
+
+                        Debug.Log(cubePlaneNV.x + cubePlaneNV.y + cubePlaneNV.z + constant_02);
 
 						var e = Vector3.Cross(cutPlaneNV, cubePlaneNV);
 
@@ -195,10 +199,11 @@ public class ObjCutting : MonoBehaviour
 
 						if (IntersectionLine(e, cubePlaneNV, cutPlaneNV, constant_01, constant_02))
 						{
-							//var obj04 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-							//obj04.transform.position = pt;
-							//obj04.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-							//obj04.name = "IntesectPoint";
+							var obj04 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+							obj04.transform.position = pt;
+							obj04.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+							obj04.name = "IntesectPoint";
+                            obj04.transform.parent = intesectPoint.transform;
 
 						}
 
