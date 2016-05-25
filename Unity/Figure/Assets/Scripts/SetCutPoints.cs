@@ -76,29 +76,34 @@ public class SetCutPoints : MonoBehaviour
                     {
                         Debug.Log("無効なカットラインです。");
 
-                    } else if (cutPoints[0].z == cutPoints[1].z && cutPoints[0].z == cutPoints[2].z)
+                    }
+                    else if (cutPoints[0].z == cutPoints[1].z && cutPoints[0].z == cutPoints[2].z)
                     {
 
                         Debug.Log("無効なカットラインです。");
 
-                    } else if(cutPoints[0].y == cutPoints[1].y && cutPoints[0].y == cutPoints[2].y)
+                    }
+                    else if (cutPoints[0].y == cutPoints[1].y && cutPoints[0].y == cutPoints[2].y)
                     {
-                        if(cutPoints[0].x != cutPoints[1].x && cutPoints[0].x != cutPoints[2].x)
+                        if (cutPoints[0].x != cutPoints[1].x && cutPoints[0].x != cutPoints[2].x)
                         {
                             GameObject[] cutObjects = CutObject.Cut(cube);
 
-                        } else if (cutPoints[0].z != cutPoints[1].z && cutPoints[0].z != cutPoints[2].z)
+                        }
+                        else if (cutPoints[0].z != cutPoints[1].z && cutPoints[0].z != cutPoints[2].z)
                         {
                             GameObject[] cutObjects = CutObject.Cut(cube);
 
-                        } else
+                        }
+                        else
                         {
                             Debug.Log("無効なカットラインです。");
 
                         }
 
 
-                    } else
+                    }
+                    else
                     {
                         GameObject[] cutObjects = CutObject.Cut(cube);
                     }

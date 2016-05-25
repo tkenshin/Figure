@@ -1,94 +1,92 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class CutObject{
+public class CutObject
+{
+    private static CutMeshFace leftFace = new CutMeshFace();
+    private static CutMeshFace rightFace = new CutMeshFace();
 
-	private SetCutPoints setCutPoints;
+    private static Plane cutPlane;
+    private static Mesh targetMesh;
 
-	private static CutMeshFace leftFace = new CutMeshFace();
-	private static CutMeshFace rightFace = new CutMeshFace();
+    private static List<Vector3> newVertices = new List<Vector3>();
 
-	private static Plane cutPlane;
-	private static Mesh targetMesh;
+    public class CutMeshFace
+    {
+        public List<Vector3> vertices = new List<Vector3>();
+        public List<Vector3> normals = new List<Vector3>();
+        public List<Vector2> uvs = new List<Vector2>();
+        public List<int> triangles = new List<int>();
 
-	private static List<Vector3> newVertices = new List<Vector3>();
+        public void InitializeAll()
+        {
+            vertices.Clear();
+            normals.Clear();
+            uvs.Clear();
+            triangles.Clear();
 
-	public class CutMeshFace
-	{
-		public List<Vector3> vertices = new List<Vector3>();
-		public List<Vector3> normals = new List<Vector3>();
-		public List<Vector2> uvs = new List<Vector2>();
-		public List<int> triangles = new List<int>();
-
-		public void InitializeAll()
-		{
-			vertices.Clear();
-			normals.Clear();
-			uvs.Clear();
-			triangles.Clear();
-
-		}
+        }
 
 
-		public void AddTriangle(int point01, int point02, int point03)
-		{
-			var index = vertices.Count;
+        public void AddTriangle(int point01, int point02, int point03)
+        {
+            var index = vertices.Count;
 
-			triangles.Add(index);
-			triangles.Add(index + 1);
-			triangles.Add(index + 2);
+            triangles.Add(index);
+            triangles.Add(index + 1);
+            triangles.Add(index + 2);
 
-			vertices.Add(targetMesh.vertices[point01]);
-			vertices.Add(targetMesh.vertices[point02]);
-			vertices.Add(targetMesh.vertices[point03]);
+            vertices.Add(targetMesh.vertices[point01]);
+            vertices.Add(targetMesh.vertices[point02]);
+            vertices.Add(targetMesh.vertices[point03]);
 
-			normals.Add(targetMesh.normals[point01]);
-			normals.Add(targetMesh.normals[point02]);
-			normals.Add(targetMesh.normals[point03]);
+            normals.Add(targetMesh.normals[point01]);
+            normals.Add(targetMesh.normals[point02]);
+            normals.Add(targetMesh.normals[point03]);
 
-			uvs.Add(targetMesh.uv[point01]);
-			uvs.Add(targetMesh.uv[point02]);
-			uvs.Add(targetMesh.uv[point03]);
+            uvs.Add(targetMesh.uv[point01]);
+            uvs.Add(targetMesh.uv[point02]);
+            uvs.Add(targetMesh.uv[point03]);
 
-		}
+        }
 
-		public void AddTriangle(Vector3[] three_points, Vector3[] three_normals, Vector2[] three_uvs, Vector3 faceNormal)
-		{
-			Vector3 CrossProductNormal = Vector3.Cross((three_points[1] - three_points[0]).normalized, (three_points[2] - three_points[0]).normalized);
+        public void AddTriangle(Vector3[] three_points, Vector3[] three_normals, Vector2[] three_uvs, Vector3 faceNormal)
+        {
+            Vector3 CrossProductNormal = Vector3.Cross((three_points[1] - three_points[0]).normalized, (three_points[2] - three_points[0]).normalized);
 
-			var point01 = 0;
-			var point02 = 1;
-			var point03 = 2;
+            var point01 = 0;
+            var point02 = 1;
+            var point03 = 2;
 
-			if (Vector3.Dot(CrossProductNormal, faceNormal) < 0)
-			{
-				point01 = 2;
-				point02 = 1;
-				point03 = 0;
+            if (Vector3.Dot(CrossProductNormal, faceNormal) < 0)
+            {
+                point01 = 2;
+                point02 = 1;
+                point03 = 0;
 
-			}
+            }
 
-			var index = vertices.Count;
+            var index = vertices.Count;
 
-			triangles.Add(index);
-			triangles.Add(index + 1);
-			triangles.Add(index + 2);
+            triangles.Add(index);
+            triangles.Add(index + 1);
+            triangles.Add(index + 2);
 
-			vertices.Add(three_points[point01]);
-			vertices.Add(three_points[point02]);
-			vertices.Add(three_points[point03]);
+            vertices.Add(three_points[point01]);
+            vertices.Add(three_points[point02]);
+            vertices.Add(three_points[point03]);
 
-			normals.Add(three_normals[point01]);
-			normals.Add(three_normals[point02]);
-			normals.Add(three_normals[point03]);
+            normals.Add(three_normals[point01]);
+            normals.Add(three_normals[point02]);
+            normals.Add(three_normals[point03]);
 
-			uvs.Add(three_uvs[point01]);
-			uvs.Add(three_uvs[point02]);
-			uvs.Add(three_uvs[point03]);
+            uvs.Add(three_uvs[point01]);
+            uvs.Add(three_uvs[point02]);
+            uvs.Add(three_uvs[point03]);
 
-		}
+        }
 
-	}
+    }
 
     public static GameObject[] Cut(GameObject target)
     {
@@ -168,32 +166,32 @@ public class CutObject{
         }
 
         Mesh leftMesh = new Mesh();
-		leftMesh.vertices = leftFace.vertices.ToArray();
-		leftMesh.triangles = leftFace.triangles.ToArray();
-		leftMesh.normals = leftFace.normals.ToArray();
-		leftMesh.uv = leftFace.uvs.ToArray();
+        leftMesh.vertices = leftFace.vertices.ToArray();
+        leftMesh.triangles = leftFace.triangles.ToArray();
+        leftMesh.normals = leftFace.normals.ToArray();
+        leftMesh.uv = leftFace.uvs.ToArray();
 
-		Mesh rightMesh = new Mesh();
-		rightMesh.vertices = rightFace.vertices.ToArray();
-		rightMesh.triangles = rightFace.triangles.ToArray();
-		rightMesh.normals = rightFace.normals.ToArray();
-		rightMesh.uv = rightFace.uvs.ToArray();
+        Mesh rightMesh = new Mesh();
+        rightMesh.vertices = rightFace.vertices.ToArray();
+        rightMesh.triangles = rightFace.triangles.ToArray();
+        rightMesh.normals = rightFace.normals.ToArray();
+        rightMesh.uv = rightFace.uvs.ToArray();
 
 
-		target.GetComponent<MeshFilter>().mesh = leftMesh;
+        target.GetComponent<MeshFilter>().mesh = leftMesh;
 
-		GameObject leftOBJ = target;
+        GameObject leftOBJ = target;
 
-		GameObject rightOBJ = new GameObject("RightOBJ", typeof(MeshFilter), typeof(MeshRenderer));
-		rightOBJ.transform.position = target.transform.position;
-		rightOBJ.transform.rotation = target.transform.rotation;
+        GameObject rightOBJ = new GameObject("RightOBJ", typeof(MeshFilter), typeof(MeshRenderer));
+        rightOBJ.transform.position = target.transform.position;
+        rightOBJ.transform.rotation = target.transform.rotation;
         rightOBJ.GetComponent<MeshFilter>().mesh = rightMesh;
 
-		return new GameObject[] { leftOBJ, rightOBJ };
-	}
+        return new GameObject[] { leftOBJ, rightOBJ };
+    }
 
-	static void CutFace(bool[] sides, int index01, int index02, int index03)
-	{
+    static void CutFace(bool[] sides, int index01, int index02, int index03)
+    {
         Vector3[] leftPoints = new Vector3[2];
         Vector3[] leftNormals = new Vector3[2];
         Vector2[] leftUvs = new Vector2[2];
@@ -205,11 +203,11 @@ public class CutObject{
         var didset_right = false;
 
         var p = index01;
-        
-        for(var i = 0; i < 3; i++)
+
+        for (var i = 0; i < 3; i++)
         {
 
-            switch(i)
+            switch (i)
             {
                 case 0:
                     p = index01;
@@ -250,7 +248,8 @@ public class CutObject{
             }
             else
             {
-                if (!didset_right) { 
+                if (!didset_right)
+                {
 
                     didset_right = true;
 
@@ -270,7 +269,7 @@ public class CutObject{
                     rightNormals[1] = targetMesh.normals[p];
 
                 }
-                
+
             }
 
         }
@@ -321,11 +320,13 @@ public class CutObject{
 
     }
 
-	void Start () {
+    void Start()
+    {
 
-	}
+    }
 
-	void Update () {
-	
-	}
+    void Update()
+    {
+
+    }
 }

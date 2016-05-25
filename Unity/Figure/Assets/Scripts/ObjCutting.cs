@@ -8,12 +8,12 @@ public class ObjCutting : MonoBehaviour
     private GameObject cube;
     private Camera mainCamera;
 
-	private MeshFilter mf;
-	private static float constant_02;
+    private MeshFilter mf;
+    private static float constant_02;
     private static float constant_01;
 
     private Vector3 tapPoint;
-	private Vector3 pt;
+    private Vector3 pt;
     private Vector3[] cubeVerPos;
 
     private List<Vector3> baseVerPos = new List<Vector3>();
@@ -27,42 +27,42 @@ public class ObjCutting : MonoBehaviour
         return Vector3.Cross(AB, AC);
     }
 
-	private bool IntersectionLine(Vector3 e, Vector3 cubePlaneNV, Vector3 cutPlaneNV, float d01, float d02)
-	{
-		if (0 != e.z)
-		{
-			pt.x = (d01 * cubePlaneNV.y - d02 * cutPlaneNV.y) / e.z;
-			pt.y = (d01 * cubePlaneNV.x - d02 * cutPlaneNV.x) / (-e.z);
-			pt.z = 0;
+    private bool IntersectionLine(Vector3 e, Vector3 cubePlaneNV, Vector3 cutPlaneNV, float d01, float d02)
+    {
+        if (0 != e.z)
+        {
+            pt.x = (d01 * cubePlaneNV.y - d02 * cutPlaneNV.y) / e.z;
+            pt.y = (d01 * cubePlaneNV.x - d02 * cutPlaneNV.x) / (-e.z);
+            pt.z = 0;
 
-			return true;
+            return true;
 
-		}
+        }
 
-		if (0 != e.y)
-		{
-			pt.x = (d01 * cubePlaneNV.z - d02 * cutPlaneNV.z) / (-e.y);
-			pt.y = 0;
-			pt.z = (d01 * cubePlaneNV.x - d02 * cutPlaneNV.x) / e.y;
+        if (0 != e.y)
+        {
+            pt.x = (d01 * cubePlaneNV.z - d02 * cutPlaneNV.z) / (-e.y);
+            pt.y = 0;
+            pt.z = (d01 * cubePlaneNV.x - d02 * cutPlaneNV.x) / e.y;
 
-			return true;
+            return true;
 
-		}
+        }
 
-		if (0 != e.x)
-		{
-			pt.x = 0;
-			pt.y = (d01 * cubePlaneNV.z - d02 * cutPlaneNV.z) / e.x;
-			pt.z = (d01 * cubePlaneNV.y - d02 * cutPlaneNV.y) / (-e.x);
+        if (0 != e.x)
+        {
+            pt.x = 0;
+            pt.y = (d01 * cubePlaneNV.z - d02 * cutPlaneNV.z) / e.x;
+            pt.z = (d01 * cubePlaneNV.y - d02 * cutPlaneNV.y) / (-e.x);
 
-			return true;
+            return true;
 
-		}
+        }
 
-		return false;
+        return false;
 
 
-	}
+    }
 
     private void Awake()
     {
@@ -135,14 +135,14 @@ public class ObjCutting : MonoBehaviour
                 cutPointArray.Add(cutPoint.transform.position);
                 Destroy(hit.collider);
 
-				if (cutPointArray.Count == 3)
-				{
-					
+                if (cutPointArray.Count == 3)
+                {
 
 
-				}
 
-                
+                }
+
+
             }
 
         }
@@ -217,7 +217,7 @@ public class ObjCutting : MonoBehaviour
 //						obj03.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 //obj03.name = "DirectionalVector";
 //						obj03.transform.parent = directionalVectors.transform;
-					  	
+
 //						if (IntersectionLine(e, cubePlaneNV, cutPlaneNV, constant_01, constant_02))
 //						{
 //							var obj04 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -225,7 +225,7 @@ public class ObjCutting : MonoBehaviour
 //							obj04.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
 //obj04.name = "IntesectPoint";
 //						 	obj04.transform.parent = intesectPoint.transform;
-					  	
+
 
 //						}
 
