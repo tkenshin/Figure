@@ -135,82 +135,14 @@ public class ObjCutting : MonoBehaviour
                 cutPointArray.Add(cutPoint.transform.position);
                 Destroy(hit.collider);
 
-                if (cutPointArray.Count == 3)
-                {
-                    var directionalVectors = new GameObject("DirectionalVectors");
-                    var cubePlaneNormalVectors = new GameObject("CubePlaneNormalVectors");
-                    var intesectPoint = new GameObject("IntesectPoints");
+				if (cutPointArray.Count == 3)
+				{
+					
 
-                    //Debug.Log(cutPointArray[0]);
-                    //Debug.Log(cutPointArray[1]);
-                    //Debug.Log(cutPointArray[2]);
 
-                    var cutPoint_01 = cutPointArray[0];
-                    var cutPoint_02 = cutPointArray[1];
-                    var cutPoint_03 = cutPointArray[2];
+				}
 
-                    var cutPlaneNV = GetCrossProduct(cutPoint_01, cutPoint_02, cutPoint_03);
-
-                    var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                    obj.transform.position = cutPlaneNV;
-                    obj.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
-                    obj.name = "CutPlaneNormalVector";
-
-                    constant_01 = -(cutPlaneNV.x * cutPoint_01.x + cutPlaneNV.y * cutPoint_01.y + cutPlaneNV.z * cutPoint_01.z);
-                    Debug.Log(cutPlaneNV.x + cutPlaneNV.y + cutPlaneNV.z + constant_01);
-
-                    // 6,4,5, 0,1,2, 3,2,1, 7,5,2, 4,1,2, 0,6,7
-
-                    int[,] verticesNo = new int[,]
-                    {
-                        { 6,0,3,7,4,0 },
-                        { 4,1,2,5,1,6 },
-                        { 5,4,1,2,2,7 }
-
-                    };
-
-                    for (var i = 0; i < verticesNo.Length / 3; i++)
-                    {
-                        var cubeVertices_01 = baseVerPos[verticesNo[0, i]];
-                        var cubeVertices_02 = baseVerPos[verticesNo[1, i]];
-                        var cubeVertices_03 = baseVerPos[verticesNo[2, i]];
-
-                        var cubePlaneNV = GetCrossProduct(cubeVertices_01, cubeVertices_02, cubeVertices_03);
-
-                        var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-                        obj02.transform.position = cubePlaneNV;
-                        obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-                        obj02.name = "CubePlaneNormalVector";
-                        obj02.transform.parent = cubePlaneNormalVectors.transform;
-
-                        constant_02 = -(cubePlaneNV.x * cubeVertices_01.x +
-                                        cubePlaneNV.y * cubeVertices_01.y +
-                                        cubePlaneNV.z * cubeVertices_01.z);
-
-                        Debug.Log(cubePlaneNV.x + cubePlaneNV.y + cubePlaneNV.z + constant_02);
-
-						var e = Vector3.Cross(cutPlaneNV, cubePlaneNV);
-
-						var obj03 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-						obj03.transform.position = e;
-						obj03.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-						obj03.name = "DirectionalVector";
-                        obj03.transform.parent = directionalVectors.transform;
-
-						if (IntersectionLine(e, cubePlaneNV, cutPlaneNV, constant_01, constant_02))
-						{
-							var obj04 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-							obj04.transform.position = pt;
-							obj04.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-							obj04.name = "IntesectPoint";
-                            obj04.transform.parent = intesectPoint.transform;
-
-						}
-
-                    }
-
-                }
-
+                
             }
 
         }
@@ -218,3 +150,85 @@ public class ObjCutting : MonoBehaviour
     }
 
 }
+
+//if (cutPointArray.Count == 3)
+//                {
+//                    var directionalVectors = new GameObject("DirectionalVectors");
+//var cubePlaneNormalVectors = new GameObject("CubePlaneNormalVectors");
+//var intesectPoint = new GameObject("IntesectPoints");
+
+////Debug.Log(cutPointArray[0]);
+////Debug.Log(cutPointArray[1]);
+////Debug.Log(cutPointArray[2]);
+
+//var cutPoint_01 = cutPointArray[0];
+//var cutPoint_02 = cutPointArray[1];
+//var cutPoint_03 = cutPointArray[2];
+
+//var cutPlaneNV = GetCrossProduct(cutPoint_01, cutPoint_02, cutPoint_03);
+
+//var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+//obj.transform.position = cutPlaneNV;
+//                    obj.transform.localScale = new Vector3(0.07f, 0.07f, 0.07f);
+//obj.name = "CutPlaneNormalVector";
+
+//                    constant_01 = -(cutPlaneNV.x* cutPoint_01.x + cutPlaneNV.y* cutPoint_01.y + cutPlaneNV.z* cutPoint_01.z);
+//Debug.Log(cutPlaneNV.x + cutPlaneNV.y + cutPlaneNV.z + constant_01);
+
+//                    // 6,4,5, 0,1,2, 3,2,1, 7,5,2, 4,1,2, 0,6,7
+
+//                    int[,] verticesNo = new int[,]
+//					{
+//						{ 6,0,3,7,4,0 },
+//						{ 4,1,2,5,1,6 },
+//						{ 5,4,1,2,2,7 }
+
+//					};
+
+//					for (var i = 0; i<verticesNo.Length / 3; i++)
+//					{
+//						var cubeVertices_01 = baseVerPos[verticesNo[0, i]];
+//var cubeVertices_02 = baseVerPos[verticesNo[1, i]];
+//var cubeVertices_03 = baseVerPos[verticesNo[2, i]];
+
+////var cubeVertices_01 = baseVerPos[3];
+////var cubeVertices_02 = baseVerPos[2];
+////var cubeVertices_03 = baseVerPos[1];
+
+//var cubePlaneNV = GetCrossProduct(cubeVertices_01, cubeVertices_02, cubeVertices_03);
+
+//var obj02 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+//obj02.transform.position = -(cubePlaneNV);
+//					    obj02.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+//obj02.name = "CubePlaneNormalVector";
+//					    obj02.transform.parent = cubePlaneNormalVectors.transform;
+
+//					    constant_02 = -(cubePlaneNV.x* cubeVertices_01.x +
+//					                    cubePlaneNV.y* cubeVertices_01.y +
+
+//										cubePlaneNV.z* cubeVertices_01.z);
+
+//Debug.Log(cubePlaneNV.x + cubePlaneNV.y + cubePlaneNV.z + constant_02);
+
+//						var e = Vector3.Cross(cutPlaneNV, cubePlaneNV);
+
+//var obj03 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+//obj03.transform.position = e;
+//						obj03.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+//obj03.name = "DirectionalVector";
+//						obj03.transform.parent = directionalVectors.transform;
+					  	
+//						if (IntersectionLine(e, cubePlaneNV, cutPlaneNV, constant_01, constant_02))
+//						{
+//							var obj04 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+//obj04.transform.position = pt;
+//							obj04.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+//obj04.name = "IntesectPoint";
+//						 	obj04.transform.parent = intesectPoint.transform;
+					  	
+
+//						}
+
+//					}
+
+//				}
