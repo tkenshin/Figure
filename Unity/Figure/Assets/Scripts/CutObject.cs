@@ -11,7 +11,7 @@ public class CutObject
 
     private static List<Vector3> newVertices = new List<Vector3>();
 
-    public class CutMeshFace
+	private class CutMeshFace
     {
         public List<Vector3> vertices = new List<Vector3>();
         public List<Vector3> normals = new List<Vector3>();
@@ -88,8 +88,9 @@ public class CutObject
 
     }
 
-    public static GameObject[] Cut(GameObject target)
+	public static GameObject[] Cut(GameObject target, Material material)
     {
+		var vertices = new GameObject("Vertices");
 
         Vector3[] cutPoints = SetCutPoints.cutPoints.ToArray();
 
@@ -107,10 +108,11 @@ public class CutObject
 
         for (var r = 0; r < targetMesh.vertices.Length; r++)
         {
-            GameObject sp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+			var sp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             sp.transform.position = targetMesh.vertices[r];
             sp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
             sp.name = "Sphere[" + r + "]";
+			sp.transform.parent = vertices.transform;
 
         }
 
@@ -179,19 +181,31 @@ public class CutObject
 
 
         target.GetComponent<MeshFilter>().mesh = leftMesh;
+		Material[] materials = target.GetComponent<MeshRenderer>().sharedMaterials;
 
-        GameObject leftOBJ = target;
+		Material[] newMaterials = new Material[materials.Length + 1];
+		materials.CopyTo(newMaterials, 0);
+		newMaterials[materials.Length] = material;
+		materials = newMaterials;
+
+
+		GameObject leftOBJ = target;
 
         GameObject rightOBJ = new GameObject("RightOBJ", typeof(MeshFilter), typeof(MeshRenderer));
         rightOBJ.transform.position = target.transform.position;
         rightOBJ.transform.rotation = target.transform.rotation;
         rightOBJ.GetComponent<MeshFilter>().mesh = rightMesh;
 
+		leftOBJ.GetComponent<MeshRenderer>().materials = materials;
+		rightOBJ.GetComponent<MeshRenderer>().materials = materials;
+
         return new GameObject[] { leftOBJ, rightOBJ };
     }
 
-    static void CutFace(bool[] sides, int index01, int index02, int index03)
+    private static void CutFace(bool[] sides, int index01, int index02, int index03)
     {
+		var newVert = new GameObject("NewVertices");
+
         Vector3[] leftPoints = new Vector3[2];
         Vector3[] leftNormals = new Vector3[2];
         Vector2[] leftUvs = new Vector2[2];
@@ -279,27 +293,46 @@ public class CutObject
 
         cutPlane.Raycast(new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized), out distance);
 
-        //var ray = new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized);
-        //Debug.DrawRay(ray.origin, ray.direction, Color.green, 2000.0f);
-
         normalizedDistance = distance / (rightPoints[0] - leftPoints[0]).magnitude;
+
         Vector3 newVertex1 = Vector3.Lerp(leftPoints[0], rightPoints[0], normalizedDistance);
+
         Vector2 newUv1 = Vector2.Lerp(leftUvs[0], rightUvs[0], normalizedDistance);
+
         Vector3 newNormal1 = Vector3.Lerp(leftNormals[0], rightNormals[0], normalizedDistance);
 
         newVertices.Add(newVertex1);
 
         cutPlane.Raycast(new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized), out distance);
 
-        //var ray02 = new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized);
-        //Debug.DrawRay(ray02.origin, ray02.direction, Color.red, 2000.0f);
-
         normalizedDistance = distance / (rightPoints[1] - leftPoints[1]).magnitude;
         Vector3 newVertex2 = Vector3.Lerp(leftPoints[1], rightPoints[1], normalizedDistance);
+
         Vector2 newUv2 = Vector2.Lerp(leftUvs[1], rightUvs[1], normalizedDistance);
         Vector3 newNormal2 = Vector3.Lerp(leftNormals[1], rightNormals[1], normalizedDistance);
 
         newVertices.Add(newVertex2);
+
+
+
+		var ray = new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized);
+		Debug.DrawRay(ray.origin, ray.direction, Color.green, 2000.0f);
+
+		var ray02 = new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized);
+		Debug.DrawRay(ray02.origin, ray02.direction, Color.red, 2000.0f);
+
+		GameObject newVerSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		newVerSp.transform.position = newVertex1;
+		newVerSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+		newVerSp.name = "NEW_VERTEX1";
+		newVerSp.transform.parent = newVert.transform;
+
+		GameObject newVerSp2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		newVerSp2.transform.position = newVertex2;
+		newVerSp2.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+		newVerSp2.name = "NEW_VERTEX2";
+		newVerSp2.transform.parent = newVert.transform;
+
 
 
         leftFace.AddTriangle(new Vector3[] { leftPoints[0], newVertex1, newVertex2 },
@@ -327,6 +360,7 @@ public class CutObject
 
     void Update()
     {
+		
 
     }
 }

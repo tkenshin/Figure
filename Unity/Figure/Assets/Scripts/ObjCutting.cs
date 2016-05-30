@@ -83,7 +83,7 @@ public class ObjCutting : MonoBehaviour
 
     void Start()
     {
-        var CubeVertices = new GameObject("CubeVertices");
+        //var CubeVertices = new GameObject("CubeVertices");
         mf = cube.GetComponent<MeshFilter>();
         cubeVerPos = mf.mesh.vertices;
 

@@ -45,28 +45,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\BLINDED_AM_ME package\OtherResources\MiniJSON.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\OtherResources\OpenPath.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\ExampleUseof_SavedData.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\LightningPath.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\LightningStrike.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\Math_Functions.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\MeshCut.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\Parallax2D.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\ParticlePathFlow.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\PortalView.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\SaveData.cs" />
-     <Compile Include="Assets\BLINDED_AM_ME package\Scripts\ToolUser.cs" />
      <Compile Include="Assets\Scripts\CutObject.cs" />
      <Compile Include="Assets\Scripts\ObjCutting.cs" />
      <Compile Include="Assets\Scripts\SetCutPoints.cs" />
      <Compile Include="Assets\Scripts\colliderAttachSp.cs" />
-     <Compile Include="Assets\Scripts\createCube.cs" />
      <Compile Include="Assets\Scripts\rotateCamera.cs" />
-     <None Include="Assets\BLINDED_AM_ME package\Shaders\Clip_Plane.shader" />
-     <None Include="Assets\BLINDED_AM_ME package\Shaders\burnThrough.shader" />
-     <None Include="Assets\BLINDED_AM_ME package\Shaders\Portal.shader" />
-     <None Include="Assets\BLINDED_AM_ME package\Shaders\Clip_Radius.shader" />
+     <None Include="Assets\Scripts\Shader\DoubleShader.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
