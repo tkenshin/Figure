@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 public class CutObject
 {
-    private static CutMeshFace leftFace = new CutMeshFace();
-    private static CutMeshFace rightFace = new CutMeshFace();
+	private static MeshGeneration a_side = new MeshGeneration();
+	private static MeshGeneration b_side = new MeshGeneration();
 
     private static Plane cutPlane;
     private static Mesh targetMesh;
 
     private static List<Vector3> newVertices = new List<Vector3>();
 
-	private class CutMeshFace
+	private class MeshGeneration
     {
         public List<Vector3> vertices = new List<Vector3>();
         public List<Vector3> normals = new List<Vector3>();
@@ -27,8 +27,7 @@ public class CutObject
 
         }
 
-
-        public void AddTriangle(int point01, int point02, int point03)
+		public void CreateTriangle(int point01, int point02, int point03)
         {
             var index = vertices.Count;
 
@@ -50,7 +49,7 @@ public class CutObject
 
         }
 
-        public void AddTriangle(Vector3[] three_points, Vector3[] three_normals, Vector2[] three_uvs, Vector3 faceNormal)
+		public void CreateTriangle(Vector3[] three_points, Vector3[] three_normals, Vector2[] three_uvs, Vector3 faceNormal)
         {
             Vector3 CrossProductNormal = Vector3.Cross((three_points[1] - three_points[0]).normalized, (three_points[2] - three_points[0]).normalized);
 
@@ -99,8 +98,8 @@ public class CutObject
         targetMesh = target.GetComponent<MeshFilter>().mesh;
 
         newVertices.Clear();
-        leftFace.InitializeAll();
-        rightFace.InitializeAll();
+        a_side.InitializeAll();
+        b_side.InitializeAll();
 
         bool[] sides = new bool[3];
         int point01, point02, point03;
@@ -149,12 +148,12 @@ public class CutObject
 
                     if (sides[0])
                     {
-                        leftFace.AddTriangle(point01, point02, point03);
+                        a_side.CreateTriangle(point01, point02, point03);
 
                     }
                     else
                     {
-                        rightFace.AddTriangle(point01, point02, point03);
+                        b_side.CreateTriangle(point01, point02, point03);
 
                     }
 
@@ -167,20 +166,20 @@ public class CutObject
             }
         }
 
-        Mesh leftMesh = new Mesh();
-        leftMesh.vertices = leftFace.vertices.ToArray();
-        leftMesh.triangles = leftFace.triangles.ToArray();
-        leftMesh.normals = leftFace.normals.ToArray();
-        leftMesh.uv = leftFace.uvs.ToArray();
+        Mesh a_mesh = new Mesh();
+        a_mesh.vertices = a_side.vertices.ToArray();
+        a_mesh.triangles = a_side.triangles.ToArray();
+        a_mesh.normals = a_side.normals.ToArray();
+        a_mesh.uv = a_side.uvs.ToArray();
 
-        Mesh rightMesh = new Mesh();
-        rightMesh.vertices = rightFace.vertices.ToArray();
-        rightMesh.triangles = rightFace.triangles.ToArray();
-        rightMesh.normals = rightFace.normals.ToArray();
-        rightMesh.uv = rightFace.uvs.ToArray();
+		Mesh b_mesh = new Mesh();
+        b_mesh.vertices = b_side.vertices.ToArray();
+        b_mesh.triangles = b_side.triangles.ToArray();
+        b_mesh.normals = b_side.normals.ToArray();
+        b_mesh.uv = b_side.uvs.ToArray();
 
 
-        target.GetComponent<MeshFilter>().mesh = leftMesh;
+        target.GetComponent<MeshFilter>().mesh = a_mesh;
 		Material[] materials = target.GetComponent<MeshRenderer>().sharedMaterials;
 
 		Material[] newMaterials = new Material[materials.Length + 1];
@@ -190,11 +189,12 @@ public class CutObject
 
 
 		GameObject leftOBJ = target;
+		leftOBJ.name = "A_Object";
 
-        GameObject rightOBJ = new GameObject("RightOBJ", typeof(MeshFilter), typeof(MeshRenderer));
+        GameObject rightOBJ = new GameObject("B_Object", typeof(MeshFilter), typeof(MeshRenderer));
         rightOBJ.transform.position = target.transform.position;
         rightOBJ.transform.rotation = target.transform.rotation;
-        rightOBJ.GetComponent<MeshFilter>().mesh = rightMesh;
+        rightOBJ.GetComponent<MeshFilter>().mesh = b_mesh;
 
 		leftOBJ.GetComponent<MeshRenderer>().materials = materials;
 		rightOBJ.GetComponent<MeshRenderer>().materials = materials;
@@ -335,19 +335,19 @@ public class CutObject
 
 
 
-        leftFace.AddTriangle(new Vector3[] { leftPoints[0], newVertex1, newVertex2 },
+        a_side.CreateTriangle(new Vector3[] { leftPoints[0], newVertex1, newVertex2 },
             new Vector3[] { leftNormals[0], newNormal1, newNormal2 },
             new Vector2[] { leftUvs[0], newUv1, newUv2 }, newNormal1);
 
-        leftFace.AddTriangle(new Vector3[] { leftPoints[0], leftPoints[1], newVertex2 },
+        a_side.CreateTriangle(new Vector3[] { leftPoints[0], leftPoints[1], newVertex2 },
             new Vector3[] { leftNormals[0], leftNormals[1], newNormal2 },
             new Vector2[] { leftUvs[0], leftUvs[1], newUv2 }, newNormal2);
 
-        rightFace.AddTriangle(new Vector3[] { rightPoints[0], newVertex1, newVertex2 },
+        b_side.CreateTriangle(new Vector3[] { rightPoints[0], newVertex1, newVertex2 },
             new Vector3[] { rightNormals[0], newNormal1, newNormal2 },
             new Vector2[] { rightUvs[0], newUv1, newUv2 }, newNormal1);
 
-        rightFace.AddTriangle(new Vector3[] { rightPoints[0], rightPoints[1], newVertex2 },
+        b_side.CreateTriangle(new Vector3[] { rightPoints[0], rightPoints[1], newVertex2 },
             new Vector3[] { rightNormals[0], rightNormals[1], newNormal2 },
             new Vector2[] { rightUvs[0], rightUvs[1], newUv2 }, newNormal2);
 

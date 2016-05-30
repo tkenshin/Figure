@@ -6,25 +6,24 @@ public class colliderAttachSp : MonoBehaviour
 
     [SerializeField]
     private GameObject cube;
-    private float boxColSize = 0.05f;
+	private float collider_size = 0.05f;
 
     private MeshFilter mf;
-    private Vector3[] cubeVerPos;
 
-    private List<GameObject> obj = new List<GameObject>();
-    private List<Vector3> baseVerPos = new List<Vector3>();
-    private List<BoxCollider> boxColArray = new List<BoxCollider>();
+	private List<GameObject> collider_objects = new List<GameObject>();
+	private List<Vector3> base_vertices = new List<Vector3>();
+	private List<BoxCollider> box_colliders = new List<BoxCollider>();
 
     private Vector3[] GetColliderSize(float size)
     {
         return new Vector3[]
         {
-            new Vector3(size, Vector3.Distance(baseVerPos[4], baseVerPos[6]), size), new Vector3(size, Vector3.Distance(baseVerPos[5], baseVerPos[7]), size),
-            new Vector3(size, Vector3.Distance(baseVerPos[4], baseVerPos[5]), size), new Vector3(size, Vector3.Distance(baseVerPos[6], baseVerPos[7]), size),
-            new Vector3(size, Vector3.Distance(baseVerPos[0], baseVerPos[6]), size), new Vector3(size, Vector3.Distance(baseVerPos[1], baseVerPos[4]), size),
-            new Vector3(size, Vector3.Distance(baseVerPos[3], baseVerPos[7]), size), new Vector3(size, Vector3.Distance(baseVerPos[2], baseVerPos[5]), size),
-            new Vector3(size, Vector3.Distance(baseVerPos[2], baseVerPos[3]), size), new Vector3(size, Vector3.Distance(baseVerPos[0], baseVerPos[1]), size),
-            new Vector3(size, Vector3.Distance(baseVerPos[1], baseVerPos[2]), size), new Vector3(size, Vector3.Distance(baseVerPos[0], baseVerPos[3]), size)
+            new Vector3(size, Vector3.Distance(base_vertices[4], base_vertices[6]), size), new Vector3(size, Vector3.Distance(base_vertices[5], base_vertices[7]), size),
+            new Vector3(size, Vector3.Distance(base_vertices[4], base_vertices[5]), size), new Vector3(size, Vector3.Distance(base_vertices[6], base_vertices[7]), size),
+            new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[6]), size), new Vector3(size, Vector3.Distance(base_vertices[1], base_vertices[4]), size),
+            new Vector3(size, Vector3.Distance(base_vertices[3], base_vertices[7]), size), new Vector3(size, Vector3.Distance(base_vertices[2], base_vertices[5]), size),
+            new Vector3(size, Vector3.Distance(base_vertices[2], base_vertices[3]), size), new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[1]), size),
+            new Vector3(size, Vector3.Distance(base_vertices[1], base_vertices[2]), size), new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[3]), size)
 
         };
     }
@@ -33,12 +32,12 @@ public class colliderAttachSp : MonoBehaviour
     {
         return new Vector3[]
         {
-            new Vector3(baseVerPos[4].x, cubeTF.position.y, baseVerPos[4].z), new Vector3(baseVerPos[5].x, cubeTF.position.y, baseVerPos[5].z),
-            new Vector3(cubeTF.position.x, baseVerPos[4].y, baseVerPos[4].z), new Vector3(cubeTF.position.x, baseVerPos[6].y, baseVerPos[6].z),
-            new Vector3(baseVerPos[0].x, baseVerPos[0].y, cubeTF.position.z), new Vector3(baseVerPos[1].x, baseVerPos[1].y, cubeTF.position.z),
-            new Vector3(baseVerPos[3].x, baseVerPos[3].y, cubeTF.position.z), new Vector3(baseVerPos[2].x, baseVerPos[2].y, cubeTF.position.z),
-            new Vector3(baseVerPos[2].x, cubeTF.position.y, baseVerPos[2].z), new Vector3(baseVerPos[0].x, cubeTF.position.y, baseVerPos[0].z),
-            new Vector3(cubeTF.position.x, baseVerPos[1].y, baseVerPos[1].z), new Vector3(cubeTF.position.x, baseVerPos[0].y, baseVerPos[0].z)
+            new Vector3(base_vertices[4].x, cubeTF.position.y, base_vertices[4].z), new Vector3(base_vertices[5].x, cubeTF.position.y, base_vertices[5].z),
+            new Vector3(cubeTF.position.x, base_vertices[4].y, base_vertices[4].z), new Vector3(cubeTF.position.x, base_vertices[6].y, base_vertices[6].z),
+            new Vector3(base_vertices[0].x, base_vertices[0].y, cubeTF.position.z), new Vector3(base_vertices[1].x, base_vertices[1].y, cubeTF.position.z),
+            new Vector3(base_vertices[3].x, base_vertices[3].y, cubeTF.position.z), new Vector3(base_vertices[2].x, base_vertices[2].y, cubeTF.position.z),
+            new Vector3(base_vertices[2].x, cubeTF.position.y, base_vertices[2].z), new Vector3(base_vertices[0].x, cubeTF.position.y, base_vertices[0].z),
+            new Vector3(cubeTF.position.x, base_vertices[1].y, base_vertices[1].z), new Vector3(cubeTF.position.x, base_vertices[0].y, base_vertices[0].z)
 
         };
     }
@@ -62,13 +61,13 @@ public class colliderAttachSp : MonoBehaviour
     {
         for (var i = 0; i < size.Length; i++)
         {
-            obj.Add(new GameObject("BoxCollider[" + i + "]"));
-            col.Add(obj[i].AddComponent<BoxCollider>());
+            collider_objects.Add(new GameObject("BoxCollider[" + i + "]"));
+            col.Add(collider_objects[i].AddComponent<BoxCollider>());
             col[i].size = size[i];
-            obj[i].transform.position = center[i];
-            obj[i].transform.rotation = angle[i];
+            collider_objects[i].transform.position = center[i];
+            collider_objects[i].transform.rotation = angle[i];
 
-            obj[i].transform.parent = gameObject.transform;
+            collider_objects[i].transform.parent = gameObject.transform;
 
         }
 
@@ -77,21 +76,21 @@ public class colliderAttachSp : MonoBehaviour
     void Start()
     {
         mf = cube.GetComponent<MeshFilter>();
-        cubeVerPos = mf.mesh.vertices;
+        Vector3[] vertices = mf.mesh.vertices;
 
 
-        foreach (var v in cubeVerPos)
+        foreach (var v in vertices)
         {
-            if (!baseVerPos.Contains(v))
+            if (!base_vertices.Contains(v))
             {
-                baseVerPos.Add(v);
+                base_vertices.Add(v);
 
             }
 
         }
 
         // AddToList (col.size, col.center, target collider);
-        CreateColliders(GetColliderSize(boxColSize), GetColliderCenter(cube.transform), GetColliderAngle(), boxColArray);   // target collider
+        CreateColliders(GetColliderSize(collider_size), GetColliderCenter(cube.transform), GetColliderAngle(), box_colliders);   // target collider
 
 
     }
