@@ -47,7 +47,6 @@ public class SetCutPoints : MonoBehaviour
 				}
 				else if (cutPoints[0].z == cutPoints[1].z && cutPoints[0].z == cutPoints[2].z)
 				{
-
 					Debug.Log("無効なカットラインです。");
 
 				}
@@ -68,7 +67,6 @@ public class SetCutPoints : MonoBehaviour
 						Debug.Log("無効なカットラインです。");
 
 					}
-
 
 				}
 				else
@@ -107,4 +105,5 @@ public class SetCutPoints : MonoBehaviour
 
         }
     }
+
 }

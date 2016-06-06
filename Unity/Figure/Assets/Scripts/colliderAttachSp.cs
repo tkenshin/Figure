@@ -1,103 +1,77 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using System.Linq;
 
 public class colliderAttachSp : MonoBehaviour
 {
-
-    [SerializeField]
-    private GameObject cube;
+	[SerializeField]
+	private GameObject cube;
 	private float collider_size = 0.05f;
 
-    private MeshFilter mf;
+	private static Vector3[] GetColliderSize(float size, Vector3[] vertices)
+	{
+		return new Vector3[]
+		{
+			new Vector3(size, Vector3.Distance(vertices[4], vertices[6]), size), new Vector3(size, Vector3.Distance(vertices[5], vertices[7]), size),
+			new Vector3(size, Vector3.Distance(vertices[4], vertices[5]), size), new Vector3(size, Vector3.Distance(vertices[6], vertices[7]), size),
+			new Vector3(size, Vector3.Distance(vertices[0], vertices[6]), size), new Vector3(size, Vector3.Distance(vertices[1], vertices[4]), size),
+			new Vector3(size, Vector3.Distance(vertices[3], vertices[7]), size), new Vector3(size, Vector3.Distance(vertices[2], vertices[5]), size),
+			new Vector3(size, Vector3.Distance(vertices[2], vertices[3]), size), new Vector3(size, Vector3.Distance(vertices[0], vertices[1]), size),
+			new Vector3(size, Vector3.Distance(vertices[1], vertices[2]), size), new Vector3(size, Vector3.Distance(vertices[0], vertices[3]), size)
+		};
+	}
 
-	private List<GameObject> collider_objects = new List<GameObject>();
-	private List<Vector3> base_vertices = new List<Vector3>();
-	private List<BoxCollider> box_colliders = new List<BoxCollider>();
+	private static Vector3[] GetColliderCenter(Transform cubeTF, Vector3[] vertices)
+	{
+		return new Vector3[]
+		{
+			new Vector3(vertices[4].x, cubeTF.position.y, vertices[4].z), new Vector3(vertices[5].x, cubeTF.position.y, vertices[5].z),
+			new Vector3(cubeTF.position.x, vertices[4].y, vertices[4].z), new Vector3(cubeTF.position.x, vertices[6].y, vertices[6].z),
+			new Vector3(vertices[0].x, vertices[0].y, cubeTF.position.z), new Vector3(vertices[1].x, vertices[1].y, cubeTF.position.z),
+			new Vector3(vertices[3].x, vertices[3].y, cubeTF.position.z), new Vector3(vertices[2].x, vertices[2].y, cubeTF.position.z),
+			new Vector3(vertices[2].x, cubeTF.position.y, vertices[2].z), new Vector3(vertices[0].x, cubeTF.position.y, vertices[0].z),
+			new Vector3(cubeTF.position.x, vertices[1].y, vertices[1].z), new Vector3(cubeTF.position.x, vertices[0].y, vertices[0].z)
+		};
+	}
 
-    private Vector3[] GetColliderSize(float size)
-    {
-        return new Vector3[]
-        {
-            new Vector3(size, Vector3.Distance(base_vertices[4], base_vertices[6]), size), new Vector3(size, Vector3.Distance(base_vertices[5], base_vertices[7]), size),
-            new Vector3(size, Vector3.Distance(base_vertices[4], base_vertices[5]), size), new Vector3(size, Vector3.Distance(base_vertices[6], base_vertices[7]), size),
-            new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[6]), size), new Vector3(size, Vector3.Distance(base_vertices[1], base_vertices[4]), size),
-            new Vector3(size, Vector3.Distance(base_vertices[3], base_vertices[7]), size), new Vector3(size, Vector3.Distance(base_vertices[2], base_vertices[5]), size),
-            new Vector3(size, Vector3.Distance(base_vertices[2], base_vertices[3]), size), new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[1]), size),
-            new Vector3(size, Vector3.Distance(base_vertices[1], base_vertices[2]), size), new Vector3(size, Vector3.Distance(base_vertices[0], base_vertices[3]), size)
+	private Quaternion[] GetColliderAngle()
+	{
+		return new Quaternion[]
+		{
+			Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0),
+			Quaternion.Euler(0, 0, 90), Quaternion.Euler(0, 0, 90),
+			Quaternion.Euler(90, 0, 0), Quaternion.Euler(90, 0, 0),
+			Quaternion.Euler(90, 0, 0), Quaternion.Euler(90, 0, 0),
+			Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0),
+			Quaternion.Euler(0, 0, 90), Quaternion.Euler(0, 0, 90)
+		};
+	}
 
-        };
-    }
+	private void CreateColliders(Vector3[] size, Vector3[] center, Quaternion[] angle)
+	{
+		for (var i = 0; i < size.Length; i++)
+		{
+			var obj = new GameObject("BoxCollider[" + i + "]");
+			obj.transform.position = center[i];
+			obj.transform.rotation = angle[i];
+			obj.transform.parent = gameObject.transform;
 
-    private Vector3[] GetColliderCenter(Transform cubeTF)
-    {
-        return new Vector3[]
-        {
-            new Vector3(base_vertices[4].x, cubeTF.position.y, base_vertices[4].z), new Vector3(base_vertices[5].x, cubeTF.position.y, base_vertices[5].z),
-            new Vector3(cubeTF.position.x, base_vertices[4].y, base_vertices[4].z), new Vector3(cubeTF.position.x, base_vertices[6].y, base_vertices[6].z),
-            new Vector3(base_vertices[0].x, base_vertices[0].y, cubeTF.position.z), new Vector3(base_vertices[1].x, base_vertices[1].y, cubeTF.position.z),
-            new Vector3(base_vertices[3].x, base_vertices[3].y, cubeTF.position.z), new Vector3(base_vertices[2].x, base_vertices[2].y, cubeTF.position.z),
-            new Vector3(base_vertices[2].x, cubeTF.position.y, base_vertices[2].z), new Vector3(base_vertices[0].x, cubeTF.position.y, base_vertices[0].z),
-            new Vector3(cubeTF.position.x, base_vertices[1].y, base_vertices[1].z), new Vector3(cubeTF.position.x, base_vertices[0].y, base_vertices[0].z)
+			var col = obj.AddComponent<BoxCollider>();
+			col.size = size[i];
+		}
+	}
 
-        };
-    }
+	void Start()
+	{
+		var mf = cube.GetComponent<MeshFilter>();
+		var vertices = mf.mesh.vertices.Distinct().ToArray();
 
-    private Quaternion[] GetColliderAngle()
-    {
-        return new Quaternion[]
-        {
-            Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0),
-            Quaternion.Euler(0, 0, 90), Quaternion.Euler(0, 0, 90),
-            Quaternion.Euler(90, 0, 0), Quaternion.Euler(90, 0, 0),
-            Quaternion.Euler(90, 0, 0), Quaternion.Euler(90, 0, 0),
-            Quaternion.Euler(0, 0, 0), Quaternion.Euler(0, 0, 0),
-            Quaternion.Euler(0, 0, 90), Quaternion.Euler(0, 0, 90)
+		// AddToList (col.size, col.center, target collider);
+		CreateColliders(GetColliderSize(collider_size, vertices), GetColliderCenter(cube.transform, vertices), GetColliderAngle());   // target collider
+	}
 
-        };
+	void Update()
+	{
 
-    }
-
-    private void CreateColliders(Vector3[] size, Vector3[] center, Quaternion[] angle, List<BoxCollider> col)
-    {
-        for (var i = 0; i < size.Length; i++)
-        {
-            collider_objects.Add(new GameObject("BoxCollider[" + i + "]"));
-            col.Add(collider_objects[i].AddComponent<BoxCollider>());
-            col[i].size = size[i];
-            collider_objects[i].transform.position = center[i];
-            collider_objects[i].transform.rotation = angle[i];
-
-            collider_objects[i].transform.parent = gameObject.transform;
-
-        }
-
-    }
-
-    void Start()
-    {
-        mf = cube.GetComponent<MeshFilter>();
-        Vector3[] vertices = mf.mesh.vertices;
-
-
-        foreach (var v in vertices)
-        {
-            if (!base_vertices.Contains(v))
-            {
-                base_vertices.Add(v);
-
-            }
-
-        }
-
-        // AddToList (col.size, col.center, target collider);
-        CreateColliders(GetColliderSize(collider_size), GetColliderCenter(cube.transform), GetColliderAngle(), box_colliders);   // target collider
-
-
-    }
-
-    void Update()
-    {
-
-    }
+	}
 
 }

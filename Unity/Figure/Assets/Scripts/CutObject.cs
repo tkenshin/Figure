@@ -9,7 +9,7 @@ public class CutObject
     private static Plane cutPlane;
     private static Mesh targetMesh;
 
-    private static List<Vector3> newVertices = new List<Vector3>();
+	private static List<Vector3> newVertices = new List<Vector3>();
 
 	private class MeshGeneration
     {
@@ -51,7 +51,7 @@ public class CutObject
 
 		public void CreateTriangle(Vector3[] three_points, Vector3[] three_normals, Vector2[] three_uvs, Vector3 faceNormal)
         {
-            Vector3 CrossProductNormal = Vector3.Cross((three_points[1] - three_points[0]).normalized, (three_points[2] - three_points[0]).normalized);
+			var CrossProductNormal = Vector3.Cross((three_points[1] - three_points[0]).normalized, (three_points[2] - three_points[0]).normalized);
 
             var point01 = 0;
             var point02 = 1;
@@ -89,7 +89,7 @@ public class CutObject
 
 	public static GameObject[] Cut(GameObject target, Material material)
     {
-		var vertices = new GameObject("Vertices");
+		//var vertices = new GameObject("Vertices");
 
         Vector3[] cutPoints = SetCutPoints.cutPoints.ToArray();
 
@@ -105,15 +105,15 @@ public class CutObject
         int point01, point02, point03;
         int[] indices;
 
-        for (var r = 0; r < targetMesh.vertices.Length; r++)
-        {
-			var sp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            sp.transform.position = targetMesh.vertices[r];
-            sp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-            sp.name = "Sphere[" + r + "]";
-			sp.transform.parent = vertices.transform;
+   //     for (var r = 0; r < targetMesh.vertices.Length; r++)
+   //     {
+			//var sp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+   //         sp.transform.position = targetMesh.vertices[r];
+   //         sp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+   //         sp.name = "Sphere[" + r + "]";
+			//sp.transform.parent = vertices.transform;
 
-        }
+   //     }
 
         for (var v = 0; v < targetMesh.subMeshCount; v++)
         {
@@ -124,7 +124,7 @@ public class CutObject
             // 36 / 3  = 12回繰り返す
             for (var i = 0; i < indices.Length; i += 3)
             {
-                // 三角メッシュ(triangles)のパターン(0, 1, 2 ...)を各point01 ~ 03に入れる。
+				// 三角メッシュ(triangles)のパターン(0, 1, 2 ...)を各point01 ~ 03に入れる。(頂点情報)
                 point01 = indices[i];
                 point02 = indices[i + 1];
                 point03 = indices[i + 2];
@@ -160,52 +160,50 @@ public class CutObject
                 }
                 else
                 {
+					// Triangle Index 情報と各 Index のBOOL情報(切断面に対してその Triangle Index が表にあるか裏にあるか)
                     CutFace(sides, point01, point02, point03);
 
                 }
             }
         }
 
-        Mesh a_mesh = new Mesh();
+		AddMeshMissing(newVertices.ToArray());
+
+		var a_mesh = new Mesh();
         a_mesh.vertices = a_side.vertices.ToArray();
         a_mesh.triangles = a_side.triangles.ToArray();
         a_mesh.normals = a_side.normals.ToArray();
         a_mesh.uv = a_side.uvs.ToArray();
 
-		Mesh b_mesh = new Mesh();
+		var b_mesh = new Mesh();
         b_mesh.vertices = b_side.vertices.ToArray();
         b_mesh.triangles = b_side.triangles.ToArray();
         b_mesh.normals = b_side.normals.ToArray();
         b_mesh.uv = b_side.uvs.ToArray();
 
-
         target.GetComponent<MeshFilter>().mesh = a_mesh;
 		Material[] materials = target.GetComponent<MeshRenderer>().sharedMaterials;
 
-		Material[] newMaterials = new Material[materials.Length + 1];
-		materials.CopyTo(newMaterials, 0);
-		newMaterials[materials.Length] = material;
-		materials = newMaterials;
 
+		var a_object = target;
+		a_object.name = "A_Object";
 
-		GameObject leftOBJ = target;
-		leftOBJ.name = "A_Object";
+		var b_object = new GameObject("B_Object");
+		b_object.AddComponent<MeshFilter>();
+		b_object.AddComponent<MeshRenderer>();
+        b_object.transform.position = target.transform.position;
+        b_object.transform.rotation = target.transform.rotation;
+        b_object.GetComponent<MeshFilter>().mesh = b_mesh;
 
-        GameObject rightOBJ = new GameObject("B_Object", typeof(MeshFilter), typeof(MeshRenderer));
-        rightOBJ.transform.position = target.transform.position;
-        rightOBJ.transform.rotation = target.transform.rotation;
-        rightOBJ.GetComponent<MeshFilter>().mesh = b_mesh;
+		a_object.GetComponent<MeshRenderer>().materials = materials;
+		b_object.GetComponent<MeshRenderer>().materials = materials;
 
-		leftOBJ.GetComponent<MeshRenderer>().materials = materials;
-		rightOBJ.GetComponent<MeshRenderer>().materials = materials;
-
-        return new GameObject[] { leftOBJ, rightOBJ };
+        return new GameObject[] { a_object, b_object };
     }
 
     private static void CutFace(bool[] sides, int index01, int index02, int index03)
     {
-		var newVert = new GameObject("NewVertices");
-
+		// 必要な配列宣言
         Vector3[] leftPoints = new Vector3[2];
         Vector3[] leftNormals = new Vector3[2];
         Vector2[] leftUvs = new Vector2[2];
@@ -213,15 +211,22 @@ public class CutObject
         Vector3[] rightNormals = new Vector3[2];
         Vector2[] rightUvs = new Vector2[2];
 
-        var didset_left = false;
-        var didset_right = false;
+		// Index01 ~ 03 は Triangle の Index が入る。
+		// 入ってくる Triangle 情報は切断点から生成された面に対して、すべての Triangle Index がTrue or Falseではないもの。
 
+		var isLeft = false;
+		var isRight = false;
+
+		// index01(int) を p に入れる。
         var p = index01;
 
-        for (var i = 0; i < 3; i++)
+		// 合計24回(仮)(CutFaceに何回くるかによって変動 CutFaceにくる回数 * 3 = XX回)
+		for (var i = 0; i < 3; i++)
         {
-
-            switch (i)
+			// i = 0 の時 p = index01
+			// i = 1 の時 p = index02
+			// i = 2 の時 p = index03
+			switch (i)
             {
                 case 0:
                     p = index01;
@@ -234,20 +239,25 @@ public class CutObject
                     break;
                 default:
                     break;
+					
             }
 
+			// 切断面に対して Triangle Index の [i] が True of False か。
+			// True だった場合 Left,  False だった場合 Rightとする。
+			// 初めの方に宣言した配列に切断面に対して右の頂点、左の頂点を入れる。
             if (sides[i])
             {
-                if (!didset_left)
-                {
 
-                    didset_left = true;
+                if (!isLeft)
+                {
+                    isLeft = true;
                     leftPoints[0] = targetMesh.vertices[p];
                     leftPoints[1] = leftPoints[0];
                     leftUvs[0] = targetMesh.uv[p];
                     leftUvs[1] = leftUvs[0];
                     leftNormals[0] = targetMesh.normals[p];
                     leftNormals[1] = leftNormals[0];
+
 
                 }
                 else
@@ -259,13 +269,14 @@ public class CutObject
 
                 }
 
+
             }
             else
             {
-                if (!didset_right)
-                {
 
-                    didset_right = true;
+                if (!isRight)
+                {
+                    isRight = true;
 
                     rightPoints[0] = targetMesh.vertices[p];
                     rightPoints[1] = rightPoints[0];
@@ -284,74 +295,152 @@ public class CutObject
 
                 }
 
+
             }
 
         }
 
+
+		// normalizeDistance(正規化された距離) を宣言(0.0f)
         var normalizedDistance = 0.0f;
+		// distance を宣言(0.0f)
         var distance = 0.0f;
 
-        cutPlane.Raycast(new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized), out distance);
+
+		// LeftPoints と RightPoints 間で Ray を飛ばし、切断面にその Ray が交わる場合 Ray に沿った距離を Distance に入れる。
+		cutPlane.Raycast(new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized), out distance);
 
         normalizedDistance = distance / (rightPoints[0] - leftPoints[0]).magnitude;
 
-        Vector3 newVertex1 = Vector3.Lerp(leftPoints[0], rightPoints[0], normalizedDistance);
+		var new_vertex_01 = Vector3.Lerp(leftPoints[0], rightPoints[0], normalizedDistance); // ray.getpointでもできる。
+		var new_uv_01 = Vector2.Lerp(leftUvs[0], rightUvs[0], normalizedDistance);
+		var new_normal_01 = Vector3.Lerp(leftNormals[0], rightNormals[0], normalizedDistance);
 
-        Vector2 newUv1 = Vector2.Lerp(leftUvs[0], rightUvs[0], normalizedDistance);
-
-        Vector3 newNormal1 = Vector3.Lerp(leftNormals[0], rightNormals[0], normalizedDistance);
-
-        newVertices.Add(newVertex1);
-
-        cutPlane.Raycast(new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized), out distance);
-
-        normalizedDistance = distance / (rightPoints[1] - leftPoints[1]).magnitude;
-        Vector3 newVertex2 = Vector3.Lerp(leftPoints[1], rightPoints[1], normalizedDistance);
-
-        Vector2 newUv2 = Vector2.Lerp(leftUvs[1], rightUvs[1], normalizedDistance);
-        Vector3 newNormal2 = Vector3.Lerp(leftNormals[1], rightNormals[1], normalizedDistance);
-
-        newVertices.Add(newVertex2);
+        newVertices.Add(new_vertex_01);
 
 
+		// LeftPoints と RightPoints 間で Ray を飛ばし、切断面にその Ray が交わる場合 Ray に沿った距離を Distance に入れる。
+		cutPlane.Raycast(new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized), out distance);
 
-		var ray = new Ray(leftPoints[0], (rightPoints[0] - leftPoints[0]).normalized);
-		Debug.DrawRay(ray.origin, ray.direction, Color.green, 2000.0f);
+		normalizedDistance = distance / (rightPoints[1] - leftPoints[1]).magnitude;
 
-		var ray02 = new Ray(leftPoints[1], (rightPoints[1] - leftPoints[1]).normalized);
-		Debug.DrawRay(ray02.origin, ray02.direction, Color.red, 2000.0f);
+		var new_vertex_02 = Vector3.Lerp(leftPoints[1], rightPoints[1], normalizedDistance); // ray.getpointでもできる。
+		var new_uv_02 = Vector2.Lerp(leftUvs[1], rightUvs[1], normalizedDistance);
+		var new_normal_02 = Vector3.Lerp(leftNormals[1], rightNormals[1], normalizedDistance);
 
-		GameObject newVerSp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		newVerSp.transform.position = newVertex1;
-		newVerSp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-		newVerSp.name = "NEW_VERTEX1";
-		newVerSp.transform.parent = newVert.transform;
-
-		GameObject newVerSp2 = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		newVerSp2.transform.position = newVertex2;
-		newVerSp2.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-		newVerSp2.name = "NEW_VERTEX2";
-		newVerSp2.transform.parent = newVert.transform;
+        newVertices.Add(new_vertex_02);
 
 
 
-        a_side.CreateTriangle(new Vector3[] { leftPoints[0], newVertex1, newVertex2 },
-            new Vector3[] { leftNormals[0], newNormal1, newNormal2 },
-            new Vector2[] { leftUvs[0], newUv1, newUv2 }, newNormal1);
+		a_side.CreateTriangle(new Vector3[] { leftPoints[0], new_vertex_01, new_vertex_02 },
+            new Vector3[] { leftNormals[0], new_normal_01, new_normal_02 },
+            new Vector2[] { leftUvs[0], new_uv_01, new_uv_02 }, new_normal_01);
 
-        a_side.CreateTriangle(new Vector3[] { leftPoints[0], leftPoints[1], newVertex2 },
-            new Vector3[] { leftNormals[0], leftNormals[1], newNormal2 },
-            new Vector2[] { leftUvs[0], leftUvs[1], newUv2 }, newNormal2);
+        a_side.CreateTriangle(new Vector3[] { leftPoints[0], leftPoints[1], new_vertex_02 },
+            new Vector3[] { leftNormals[0], leftNormals[1], new_normal_02 },
+            new Vector2[] { leftUvs[0], leftUvs[1], new_uv_02 }, new_normal_02);
 
-        b_side.CreateTriangle(new Vector3[] { rightPoints[0], newVertex1, newVertex2 },
-            new Vector3[] { rightNormals[0], newNormal1, newNormal2 },
-            new Vector2[] { rightUvs[0], newUv1, newUv2 }, newNormal1);
+        b_side.CreateTriangle(new Vector3[] { rightPoints[0], new_vertex_01, new_vertex_02 },
+            new Vector3[] { rightNormals[0], new_normal_01, new_normal_02 },
+            new Vector2[] { rightUvs[0], new_uv_01, new_uv_02 }, new_normal_01);
 
-        b_side.CreateTriangle(new Vector3[] { rightPoints[0], rightPoints[1], newVertex2 },
-            new Vector3[] { rightNormals[0], rightNormals[1], newNormal2 },
-            new Vector2[] { rightUvs[0], rightUvs[1], newUv2 }, newNormal2);
+        b_side.CreateTriangle(new Vector3[] { rightPoints[0], rightPoints[1], new_vertex_02 },
+            new Vector3[] { rightNormals[0], rightNormals[1], new_normal_02 },
+            new Vector2[] { rightUvs[0], rightUvs[1], new_uv_02 }, new_normal_02);
+
 
     }
+
+	private static void AddMeshMissing(Vector3[] cut_points)
+	{
+		var newVerticesOBJ = new GameObject("Vertices");
+
+
+		var new_vertices = new List<Vector3>();
+		var pursuer = new List<Vector3>();
+
+
+		var center = Vector3.zero;
+
+		for (var i = 0; i < cut_points.Length; i++)
+		{
+			if (!new_vertices.Contains(cut_points[i]))
+			{
+				new_vertices.Add(cut_points[i]);
+				new_vertices.Add(cut_points[i + 1]);
+
+				pursuer.Add(cut_points[i]);
+				pursuer.Add(cut_points[i + 1]);
+
+				Debug.Log("aa");
+
+				var isDone = false;
+
+				while (!isDone)
+				{
+					isDone = true;
+
+					for (var r = 0; r < cut_points.Length; r += 2)
+					{
+						if (cut_points[r] == new_vertices[new_vertices.Count - 1] && !pursuer.Contains(cut_points[r + 1]))
+						{
+							isDone = false;
+							new_vertices.Add(cut_points[r + 1]);
+							pursuer.Add(cut_points[r + 1]);
+
+						}
+						else if (cut_points[r + 1] == new_vertices[new_vertices.Count - 1] && !pursuer.Contains(cut_points[r]))
+						{
+
+							isDone = false;
+							new_vertices.Add(cut_points[r]);
+							pursuer.Add(cut_points[r]);
+
+						}
+
+					}
+
+				}
+
+			}
+
+		}
+
+		foreach (Vector3 v in new_vertices)
+		{
+			center += v;
+
+		}
+
+		// 算術平均
+		center = center / new_vertices.Count;
+
+		for (var i = 0; i < new_vertices.Count; i++)
+		{
+			a_side.CreateTriangle(new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+								  new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+			                      new Vector2[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+			                      center);
+
+			b_side.CreateTriangle(new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+								  new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+								  new Vector2[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+								  center);
+
+		}
+
+
+		//for (var i = 0; i < new_vertices.Count; i++)
+		//{
+		//	var vertexOBJ = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		//	vertexOBJ.transform.position = new_vertices[i];
+		//	vertexOBJ.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+		//	vertexOBJ.name = "Vertex Object[" + i + "]";
+		//	vertexOBJ.transform.parent = newVerticesOBJ.transform;
+
+		//}
+
+	}
 
     void Start()
     {
@@ -363,4 +452,6 @@ public class CutObject
 		
 
     }
+
+
 }
