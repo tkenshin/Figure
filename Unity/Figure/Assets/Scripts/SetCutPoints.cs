@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 public class SetCutPoints : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject cube;
-    [SerializeField]
-    private Camera mainCamera;
+	[SerializeField]
+	private GameObject cube;
+	[SerializeField]
+	private Camera mainCamera;
 	[SerializeField]
 	private Material material;
 
-    private static MeshFilter mf;
-    private static Vector3 tapPoint;
-    private static Vector3[] cubeVertices;
-    private static List<Vector3> baseVertices = new List<Vector3>();
+	private static MeshFilter mf;
+	private static Vector3 tapPoint;
+	private static Vector3[] cubeVertices;
+	private static List<Vector3> baseVertices = new List<Vector3>();
 
-    public static List<Vector3> cutPoints = new List<Vector3>();
+	public static List<Vector3> cutPoints = new List<Vector3>();
 
 	private void LocateCuttingPoints(Vector3[] cutPoint)
 	{
@@ -79,31 +79,30 @@ public class SetCutPoints : MonoBehaviour
 
 	}
 
-    void Start()
-    {
+	void Start()
+	{
 		cube.GetComponent<Renderer>().material = material;
-        mf = cube.GetComponent<MeshFilter>();
-        cubeVertices = mf.mesh.vertices;
+		mf = cube.GetComponent<MeshFilter>();
+		cubeVertices = mf.mesh.vertices;
 
-        foreach (var v in cubeVertices)
-        {
-            if (!baseVertices.Contains(v))
-            {
-                baseVertices.Add(v);
+		foreach (var v in cubeVertices)
+		{
+			if (!baseVertices.Contains(v))
+			{
+				baseVertices.Add(v);
 
-            }
+			}
 
-        }
+		}
 
-    }
+	}
 
-    void Update()
-    {
-        if (Input.GetMouseButtonUp(0))
+	void Update()
+	{
+		if (Input.GetMouseButtonUp(0))
 		{
 			LocateCuttingPoints(cutPoints.ToArray());
 
-        }
-    }
-
+		}
+	}
 }
