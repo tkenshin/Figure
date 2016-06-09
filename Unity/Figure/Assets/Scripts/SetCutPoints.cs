@@ -15,6 +15,7 @@ public class SetCutPoints : MonoBehaviour
 	private static Vector3 tapPoint;
 	private static Vector3[] cubeVertices;
 	private static List<Vector3> baseVertices = new List<Vector3>();
+	private static List<GameObject> cutPointObjects = new List<GameObject>();
 
 	public static List<Vector3> cutPoints = new List<Vector3>();
 
@@ -34,8 +35,10 @@ public class SetCutPoints : MonoBehaviour
 			cutPointOBJ.transform.localRotation = new Quaternion(0, 0, 0, 0);
 			cutPointOBJ.transform.localPosition = new Vector3(0, cutPointOBJ.transform.localPosition.y, 0);
 			cutPointOBJ.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+			Destroy(cutPointOBJ.GetComponent<SphereCollider>());
 
 			cutPoints.Add(cutPointOBJ.transform.position);
+			cutPointObjects.Add(cutPointOBJ);
 			Destroy(hit.collider);
 
 			if (cutPoints.Count == 3)
@@ -73,6 +76,10 @@ public class SetCutPoints : MonoBehaviour
 				{
 					GameObject[] cutObjects = CutObject.Cut(cube, material);
 				}
+
+				Destroy(cutPointObjects[0]);
+				Destroy(cutPointObjects[1]);
+				Destroy(cutPointObjects[2]);
 
 			}
 		}

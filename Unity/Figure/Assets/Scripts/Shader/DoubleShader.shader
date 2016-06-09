@@ -1,6 +1,6 @@
-﻿Shader "DoubleShader" {
+﻿Shader "Custom/DoubleShader" {
     Properties {
-        _Color ("Main Color", Color) = (0,0,0,0)
+        _Color ("Main Color", Color) = (1,1,1,1)
         _MainTex ("Base (RGB)", 3D) = "white" {}
         //_BumpMap ("Bump (RGB) Illumin (A)", 2D) = "bump" {}
     }
@@ -14,7 +14,7 @@
         Tags {"LightMode" = "Always" /* Upgrade NOTE: changed from PixelOrNone to Always */}
         Color [_PPLAmbient]
         SetTexture [_BumpMap] {
-            constantColor (0,0,0)
+            constantColor (1,1,1)
             combine constant lerp (texture) previous
             }
         SetTexture [_MainTex] {

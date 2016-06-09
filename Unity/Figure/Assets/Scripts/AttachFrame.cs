@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Linq;
 
-public class colliderAttachSp : MonoBehaviour
+public class AttachFrame : MonoBehaviour
 {
 	[SerializeField]
 	private GameObject cube;
@@ -18,6 +18,7 @@ public class colliderAttachSp : MonoBehaviour
 			new Vector3(size, Vector3.Distance(vertices[2], vertices[3]), size), new Vector3(size, Vector3.Distance(vertices[0], vertices[1]), size),
 			new Vector3(size, Vector3.Distance(vertices[1], vertices[2]), size), new Vector3(size, Vector3.Distance(vertices[0], vertices[3]), size)
 		};
+
 	}
 
 	private static Vector3[] GetColliderCenter(Transform cubeTF, Vector3[] vertices)
@@ -60,6 +61,35 @@ public class colliderAttachSp : MonoBehaviour
 		}
 	}
 
+	public static void CreateAfterCutting(GameObject a_obj, GameObject b_obj)
+	{
+		//var a_vertices_obj = new GameObject("A_VERTICES");
+		//var b_vertices_obj = new GameObject("B_VERTICES");
+
+		//Vector3[] a_vertices = a_obj.GetComponent<MeshFilter>().mesh.vertices;
+		//Vector3[] b_vertices = b_obj.GetComponent<MeshFilter>().mesh.vertices;
+
+		//for (var i = 0; i < a_vertices.Length; i++)
+		//{
+		//	var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		//	obj.transform.position = a_vertices[i];
+		//	obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+		//	obj.name = "a_vertex[" + i + "]";
+		//	obj.transform.parent = a_vertices_obj.transform;
+
+		//}
+
+		//for (var i = 0; i < b_vertices.Length; i++)
+		//{
+		//	var obj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+		//	obj.transform.position = b_vertices[i];
+		//	obj.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+		//	obj.name = "b_vertex[" + i + "]";
+		//	obj.transform.parent = b_vertices_obj.transform;
+
+		//}
+
+	}
 
 	void Start()
 	{

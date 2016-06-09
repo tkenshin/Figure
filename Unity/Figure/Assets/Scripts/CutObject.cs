@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class CutObject
@@ -10,7 +11,7 @@ public class CutObject
 	private static Mesh targetMesh;
 
 	private static List<Vector3> newVertices = new List<Vector3>();
-
+			
 	private class MeshGeneration
 	{
 		public List<Vector3> vertices = new List<Vector3>();
@@ -89,8 +90,6 @@ public class CutObject
 
 	public static GameObject[] Cut(GameObject target, Material material)
 	{
-		//var vertices = new GameObject("Vertices");
-
 		Vector3[] cutPoints = SetCutPoints.cutPoints.ToArray();
 
 		cutPlane = new Plane(cutPoints[0], cutPoints[1], cutPoints[2]);
@@ -183,7 +182,6 @@ public class CutObject
 
 		target.GetComponent<MeshFilter>().mesh = a_mesh;
 		Material[] materials = target.GetComponent<MeshRenderer>().sharedMaterials;
-
 
 		var a_object = target;
 		a_object.name = "A_Object";
@@ -355,10 +353,8 @@ public class CutObject
 	{
 		var newVerticesOBJ = new GameObject("Vertices");
 
-
 		var new_vertices = new List<Vector3>();
 		var pursuer = new List<Vector3>();
-
 
 		var center = Vector3.zero;
 
@@ -371,8 +367,6 @@ public class CutObject
 
 				pursuer.Add(cut_points[i]);
 				pursuer.Add(cut_points[i + 1]);
-
-				Debug.Log("aa");
 
 				var isDone = false;
 
@@ -418,14 +412,14 @@ public class CutObject
 		for (var i = 0; i < new_vertices.Count; i++)
 		{
 			a_side.CreateTriangle(new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
-								  new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+			                      new Vector3[] { -cutPlane.normal, -cutPlane.normal, -cutPlane.normal },
 								  new Vector2[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
-								  center);
+								  -cutPlane.normal);
 
 			b_side.CreateTriangle(new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
-								  new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
+								  new Vector3[] { cutPlane.normal, cutPlane.normal, cutPlane.normal },
 								  new Vector2[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
-								  center);
+								  cutPlane.normal);
 
 		}
 
