@@ -4,7 +4,7 @@ using System.Collections;
 public class CameraControl : MonoBehaviour
 {
 	[SerializeField]
-	private Camera camera;
+	private Camera cam;
 
 	private const float minCameraAngleX = 310.0f;
 	private const float maxCameraAngleX = 20.0f;
@@ -36,39 +36,19 @@ public class CameraControl : MonoBehaviour
 
 		if (cameraMode)
 		{
-
 			if (Input.touchCount == 2)
 			{
-				var touchZero = Input.GetTouch(0);
-				var touchOne = Input.GetTouch(1);
+				Touch zero = Input.GetTouch(0);
+				Touch one = Input.GetTouch(1);
 
-				var touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
-				var touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
-
-				var prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
-				var touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-
-				var deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-				if (camera.orthographic)
-				{
-					camera.orthographicSize += deltaMagnitudeDiff * orthoZoomSpeed;
-
-					camera.orthographicSize = Mathf.Max(camera.orthographicSize, 0.1f);
-				}
-				else
-				{
-					camera.fieldOfView += deltaMagnitudeDiff * perspectiveZoomSpeed;
-
-					camera.fieldOfView = Mathf.Clamp(camera.fieldOfView, 0.1f, 179.9f);
-				}
+				var zeroDeltaPosition = zero.position - zero.deltaPosition;
+				var oneDeltaPosition = one.position - one.deltaPosition;
 
 
 			}
 
-			if ((Input.touchCount == 1 && !isMouseDown) || Input.GetMouseButtonDown(0))
+			if ((Input.touchCount == 1 && !isMouseDown) && Input.touchCount != 2 || Input.GetMouseButtonDown(0))
 			{
-				//			Debug.Log ("touch");
 				baseMousePos = Input.mousePosition;
 				isMouseDown = true;
 
@@ -103,7 +83,6 @@ public class CameraControl : MonoBehaviour
 			}
 
 		}
-
 
 	}
 }

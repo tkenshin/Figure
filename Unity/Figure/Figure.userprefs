@@ -1,9 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SetCutPoints.cs">
     <Files>
-      <File FileName="Assets/Scripts/SetCutPoints.cs" Line="21" Column="54" />
-      <File FileName="Assets/Scripts/CutObject.cs" Line="14" Column="2" />
-      <File FileName="Assets/Scripts/AttachFrame.cs" Line="82" Column="43" />
+      <File FileName="Assets/Scripts/SetCutPoints.cs" Line="60" Column="10" />
+      <File FileName="Assets/Scripts/CutObject.cs" Line="95" Column="18" />
+      <File FileName="Assets/Scripts/AttachFrame.cs" Line="82" Column="48" />
       <File FileName="Assets/Scripts/CameraControl.cs" Line="53" Column="28" />
     </Files>
   </MonoDevelop.Ide.Workbench>

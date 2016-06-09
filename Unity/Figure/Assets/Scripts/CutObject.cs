@@ -11,7 +11,7 @@ public class CutObject
 	private static Mesh targetMesh;
 
 	private static List<Vector3> newVertices = new List<Vector3>();
-			
+
 	private class MeshGeneration
 	{
 		public List<Vector3> vertices = new List<Vector3>();
@@ -84,6 +84,7 @@ public class CutObject
 			uvs.Add(three_uvs[point02]);
 			uvs.Add(three_uvs[point03]);
 
+
 		}
 
 	}
@@ -97,6 +98,7 @@ public class CutObject
 		targetMesh = target.GetComponent<MeshFilter>().mesh;
 
 		newVertices.Clear();
+
 		a_side.InitializeAll();
 		b_side.InitializeAll();
 
@@ -351,8 +353,6 @@ public class CutObject
 
 	private static void AddMeshMissing(Vector3[] cut_points)
 	{
-		var newVerticesOBJ = new GameObject("Vertices");
-
 		var new_vertices = new List<Vector3>();
 		var pursuer = new List<Vector3>();
 
@@ -412,7 +412,7 @@ public class CutObject
 		for (var i = 0; i < new_vertices.Count; i++)
 		{
 			a_side.CreateTriangle(new Vector3[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
-			                      new Vector3[] { -cutPlane.normal, -cutPlane.normal, -cutPlane.normal },
+								  new Vector3[] { -cutPlane.normal, -cutPlane.normal, -cutPlane.normal },
 								  new Vector2[] { new_vertices[i], new_vertices[(i + 1) % new_vertices.Count], center },
 								  -cutPlane.normal);
 
@@ -422,7 +422,6 @@ public class CutObject
 								  cutPlane.normal);
 
 		}
-
 
 		//for (var i = 0; i < new_vertices.Count; i++)
 		//{
@@ -443,7 +442,6 @@ public class CutObject
 
 	void Update()
 	{
-
 
 	}
 
