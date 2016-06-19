@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class CutObject
 {
+	public static bool isCut = false;
+
 	private static MeshGeneration a_side = new MeshGeneration();
 	private static MeshGeneration b_side = new MeshGeneration();
 
@@ -168,7 +170,7 @@ public class CutObject
 			}
 		}
 
-		AddMeshMissing(newVertices.ToArray());
+		AddMeshMissing(target, newVertices.ToArray());
 
 		var a_mesh = new Mesh();
 		a_mesh.vertices = a_side.vertices.ToArray();
@@ -195,10 +197,39 @@ public class CutObject
 		b_object.transform.rotation = target.transform.rotation;
 		b_object.GetComponent<MeshFilter>().mesh = b_mesh;
 
+		a_object.AddComponent<MeshCollider>();
 		a_object.GetComponent<MeshRenderer>().materials = materials;
+		a_object.GetComponent<MeshRenderer>().material.color = Color.white;
+
+		b_object.AddComponent<MeshCollider>();
 		b_object.GetComponent<MeshRenderer>().materials = materials;
+		b_object.GetComponent<MeshRenderer>().material.color = Color.green;
+
+
+		a_mesh.SetIndices(MakeIndices(a_mesh.triangles), MeshTopology.Lines, 0);
+		b_mesh.SetIndices(MakeIndices(b_mesh.triangles), MeshTopology.Lines, 0);
+
+		isCut = true;
 
 		return new GameObject[] { a_object, b_object };
+	}
+
+	private static int[] MakeIndices(int[] triangles)
+	{
+		int[] indices = new int[2 * triangles.Length];
+		var i = 0;
+
+		for (int t = 0; t < triangles.Length; t += 3)
+		{
+			indices[i++] = triangles[t];        //start
+			indices[i++] = triangles[t + 1];    //end
+			indices[i++] = triangles[t + 1];    //start
+			indices[i++] = triangles[t + 2];    //end
+			indices[i++] = triangles[t + 2];    //start
+			indices[i++] = triangles[t];        //end
+		}
+
+		return indices;
 	}
 
 	private static void CutFace(bool[] sides, int index01, int index02, int index03)
@@ -236,8 +267,6 @@ public class CutObject
 					break;
 				case 2:
 					p = index03;
-					break;
-				default:
 					break;
 
 			}
@@ -351,7 +380,7 @@ public class CutObject
 
 	}
 
-	private static void AddMeshMissing(Vector3[] cut_points)
+	private static void AddMeshMissing(GameObject target, Vector3[] cut_points)
 	{
 		var new_vertices = new List<Vector3>();
 		var pursuer = new List<Vector3>();

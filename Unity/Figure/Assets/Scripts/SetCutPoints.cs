@@ -88,7 +88,6 @@ public class SetCutPoints : MonoBehaviour
 
 	void Start()
 	{
-		cube.GetComponent<Renderer>().material = material;
 		mf = cube.GetComponent<MeshFilter>();
 		cubeVertices = mf.mesh.vertices;
 
@@ -108,6 +107,23 @@ public class SetCutPoints : MonoBehaviour
 	{
 		if (Input.GetMouseButtonUp(0))
 		{
+
+			if (CutObject.isCut)
+			{
+
+				var mousePos = Input.mousePosition;
+				var ray = Camera.main.ScreenPointToRay(mousePos);
+				var hit = new RaycastHit();
+
+				if (Physics.Raycast(ray, out hit, 100000) && hit.collider.gameObject != null)
+				{
+
+					Destroy(hit.collider.gameObject);
+
+					CutObject.isCut = false;
+				}
+			}
+
 			LocateCuttingPoints(cutPoints.ToArray());
 
 		}
