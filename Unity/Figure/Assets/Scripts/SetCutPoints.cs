@@ -86,7 +86,7 @@ public class SetCutPoints : MonoBehaviour
 
 	}
 
-	void Start()
+	void Awake()
 	{
 		mf = cube.GetComponent<MeshFilter>();
 		cubeVertices = mf.mesh.vertices;

@@ -1,10 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CameraControl : MonoBehaviour
 {
 	[SerializeField]
 	private Camera cam;
+	[SerializeField]
+	private Button camModeButton;
+	[SerializeField]
+	private Sprite camOnSprite;
+	[SerializeField]
+	private Sprite camOffSprite;
 
 	private const float minCameraAngleX = 310.0f;
 	private const float maxCameraAngleX = 20.0f;
@@ -14,12 +21,34 @@ public class CameraControl : MonoBehaviour
 	private Vector3 baseMousePos;
 	private bool isMouseDown = false;
 
-	public bool isAutoRotation = true;
-	public bool cameraMode = false;
+	private bool isAutoRotation = false;
+	private bool cameraMode = true;
 
-	void Start()
+	public void ChangeCameraMode()
 	{
-		
+		if (cameraMode)
+		{
+			camModeButton.GetComponent<Image>().sprite = camOnSprite;
+			cameraMode = false;
+
+		}
+		else {
+			camModeButton.GetComponent<Image>().sprite = camOffSprite;
+			cameraMode = true;
+
+		}
+
+	}
+
+	void Awake()
+	{
+		if (camModeButton.GetComponent<Image>().sprite == null)
+		{
+			camModeButton.GetComponent<Image>().sprite = camOffSprite;
+
+		}
+
+
 	}
 
 	void Update()

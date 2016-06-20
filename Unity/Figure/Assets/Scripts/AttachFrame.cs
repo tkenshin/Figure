@@ -61,7 +61,7 @@ public class AttachFrame : MonoBehaviour
 		}
 	}
 		
-	void Start()
+	void Awake()
 	{
 		var mf = cube.GetComponent<MeshFilter>();
 		var vertices = mf.mesh.vertices.Distinct().ToArray();

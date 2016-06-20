@@ -12,25 +12,23 @@ public class TextControl : MonoBehaviour {
 	}
 
 	void Update () {
-		if (CutObject.meshState == MeshState.None)
+		switch (CutObject.meshState)
 		{
-			instruction_text.text = "切断点を選択 - " + (3 - SetCutPoints.cutPoints.Count) + " -";
-
+			case MeshState.None:
+				instruction_text.text = "切断点を選択 - " + (3 - SetCutPoints.cutPoints.Count) + " -";
+				break;
+				
+			case MeshState.Isolation:
+				instruction_text.text = "削除対象を選択";
+				break;
+				
+			case MeshState.Cut:
+				instruction_text.text = "切断完了";
+				break;
+				
+			default:
+				instruction_text.text = "無効な切断点";
+				break;
 		}
-		else if (CutObject.meshState == MeshState.Isolation)
-		{
-			instruction_text.text = "削除対象を選択";
-
-		}
-		else if (CutObject.meshState == MeshState.Cut)
-		{
-			instruction_text.text = "切断完了";
-
-		}
-		else {
-			instruction_text.text = "無効な切断点です";
-
-		}
-	
 	}
 }

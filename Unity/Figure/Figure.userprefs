@@ -1,11 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/TextControl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/CameraControl.cs">
     <Files>
-      <File FileName="Assets/Scripts/CutObject.cs" Line="95" Column="3" />
-      <File FileName="Assets/Scripts/SetCutPoints.cs" Line="40" Column="50" />
-      <File FileName="Assets/Scripts/AttachFrame.cs" Line="17" Column="34" />
-      <File FileName="Assets/Scripts/MeshState.cs" Line="16" Column="2" />
-      <File FileName="Assets/Scripts/TextControl.cs" Line="16" Column="4" />
+      <File FileName="Assets/Scripts/CutObject.cs" Line="474" Column="1" />
+      <File FileName="Assets/Scripts/SetCutPoints.cs" Line="89" Column="12" />
+      <File FileName="Assets/Scripts/AttachFrame.cs" Line="64" Column="12" />
+      <File FileName="Assets/Scripts/MeshState.cs" Line="27" Column="2" />
+      <File FileName="Assets/Scripts/TextControl.cs" Line="28" Column="5" />
+      <File FileName="Assets/Scripts/CameraControl.cs" Line="58" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
