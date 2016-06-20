@@ -45,12 +45,12 @@ public class SetCutPoints : MonoBehaviour
 			{
 				if (cutPoints[0].x == cutPoints[1].x && cutPoints[0].x == cutPoints[2].x)
 				{
-					Debug.Log("無効なカットラインです。");
+					CutObject.meshState = MeshState.Invalid;
 
 				}
 				else if (cutPoints[0].z == cutPoints[1].z && cutPoints[0].z == cutPoints[2].z)
 				{
-					Debug.Log("無効なカットラインです。");
+					CutObject.meshState = MeshState.Invalid;
 
 				}
 				else if (cutPoints[0].y == cutPoints[1].y && cutPoints[0].y == cutPoints[2].y)
@@ -67,7 +67,7 @@ public class SetCutPoints : MonoBehaviour
 					}
 					else
 					{
-						Debug.Log("無効なカットラインです。");
+						CutObject.meshState = MeshState.Invalid;
 
 					}
 
@@ -108,7 +108,7 @@ public class SetCutPoints : MonoBehaviour
 		if (Input.GetMouseButtonUp(0))
 		{
 
-			if (CutObject.isCut)
+			if (CutObject.meshState == MeshState.Isolation)
 			{
 
 				var mousePos = Input.mousePosition;
@@ -120,8 +120,9 @@ public class SetCutPoints : MonoBehaviour
 
 					Destroy(hit.collider.gameObject);
 
-					CutObject.isCut = false;
+					CutObject.meshState = MeshState.Cut;
 				}
+
 			}
 
 			LocateCuttingPoints(cutPoints.ToArray());

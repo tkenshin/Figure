@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class CutObject
 {
-	public static bool isCut = false;
+	public static MeshState meshState = MeshState.None;
 
 	private static MeshGeneration a_side = new MeshGeneration();
 	private static MeshGeneration b_side = new MeshGeneration();
@@ -209,7 +209,7 @@ public class CutObject
 		a_mesh.SetIndices(MakeIndices(a_mesh.triangles), MeshTopology.Lines, 0);
 		b_mesh.SetIndices(MakeIndices(b_mesh.triangles), MeshTopology.Lines, 0);
 
-		isCut = true;
+		meshState = MeshState.Isolation;
 
 		return new GameObject[] { a_object, b_object };
 	}

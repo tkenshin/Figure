@@ -48,7 +48,9 @@
      <Compile Include="Assets\Scripts\AttachFrame.cs" />
      <Compile Include="Assets\Scripts\CameraControl.cs" />
      <Compile Include="Assets\Scripts\CutObject.cs" />
+     <Compile Include="Assets\Scripts\MeshState.cs" />
      <Compile Include="Assets\Scripts\SetCutPoints.cs" />
+     <Compile Include="Assets\Scripts\TextControl.cs" />
      <None Include="Assets\Scripts\Shader\DoubleShader.shader" />
      <None Include="Assets\Scripts\Shader\MakeLine.shader" />
  <Reference Include="UnityEngine.Networking">
