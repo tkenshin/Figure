@@ -6,6 +6,7 @@ public class CameraControl : MonoBehaviour
 {
 	[SerializeField]
 	private Camera cam;
+
 	[SerializeField]
 	private Button camModeButton;
 	[SerializeField]
@@ -40,6 +41,28 @@ public class CameraControl : MonoBehaviour
 
 	}
 
+	public void ChangeAutoMode()
+	{
+		if (isAutoRotation)
+		{
+			isAutoRotation = false;
+
+		}
+		else {
+			isAutoRotation = true;
+
+		}
+
+	}
+
+	public void ReloadScene()
+	{
+#pragma warning disable CS0618 // Type or member is obsolete
+		Application.LoadLevel(Application.loadedLevel);
+#pragma warning restore CS0618 // Type or member is obsolete
+
+	}
+
 	void Awake()
 	{
 		if (camModeButton.GetComponent<Image>().sprite == null)
@@ -47,7 +70,6 @@ public class CameraControl : MonoBehaviour
 			camModeButton.GetComponent<Image>().sprite = camOffSprite;
 
 		}
-
 
 	}
 

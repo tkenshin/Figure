@@ -86,8 +86,20 @@ public class SetCutPoints : MonoBehaviour
 
 	}
 
+	void InitializeAll()
+	{
+		cutPoints.Clear();
+		baseVertices.Clear();
+		cutPointObjects.Clear();
+
+		CutObject.meshState = MeshState.None;
+
+	}
+
 	void Awake()
 	{
+		InitializeAll();
+
 		mf = cube.GetComponent<MeshFilter>();
 		cubeVertices = mf.mesh.vertices;
 
