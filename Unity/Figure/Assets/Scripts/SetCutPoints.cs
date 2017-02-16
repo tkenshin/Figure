@@ -55,26 +55,13 @@ public class SetCutPoints : MonoBehaviour
 				}
 				else if (cutPoints[0].y == cutPoints[1].y && cutPoints[0].y == cutPoints[2].y)
 				{
-					if (cutPoints[0].x != cutPoints[1].x && cutPoints[0].x != cutPoints[2].x)
-					{
-						CutObject.Cut(cube, material);
-
-					}
-					else if (cutPoints[0].z != cutPoints[1].z && cutPoints[0].z != cutPoints[2].z)
-					{
-						CutObject.Cut(cube, material);
-
-					}
-					else
-					{
-						CutObject.meshState = MeshState.Invalid;
-
-					}
+					CutObject.meshState = MeshState.Invalid;
 
 				}
 				else
 				{
 					CutObject.Cut(cube, material);
+
 				}
 
 				Destroy(cutPointObjects[0]);
