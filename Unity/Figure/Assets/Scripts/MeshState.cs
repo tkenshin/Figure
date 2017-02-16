@@ -22,6 +22,6 @@ public enum MeshState
 	/// <summary>
 	/// カットされている。(分離した一方を切断した状態)
 	/// </summary>
-	Cut
+	Cutted
 
 }

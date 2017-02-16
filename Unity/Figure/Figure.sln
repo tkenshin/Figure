@@ -1,7 +1,7 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{666DF2F4-8CD1-6F38-212C-093999248769}") = "Figure", "Assembly-CSharp.csproj", "{CBC34930-453A-E36C-34A0-DE71D8212316}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Figure", "Assembly-CSharp.csproj", "{CBC34930-453A-E36C-34A0-DE71D8212316}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

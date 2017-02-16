@@ -108,23 +108,12 @@ public class CutObject
 		int point01, point02, point03;
 		int[] indices;
 
-		//     for (var r = 0; r < targetMesh.vertices.Length; r++)
-		//     {
-		//var sp = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-		//         sp.transform.position = targetMesh.vertices[r];
-		//         sp.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
-		//         sp.name = "Sphere[" + r + "]";
-		//sp.transform.parent = vertices.transform;
-
-		//     }
-
 		for (var v = 0; v < targetMesh.subMeshCount; v++)
 		{
 			// indices.Length = 36(0 ~ 35);
 			// indicesにはCube(対象)の三角メッシュのIndex情報が入る。
 			indices = targetMesh.GetIndices(v);
 
-			// 36 / 3  = 12回繰り返す
 			for (var i = 0; i < indices.Length; i += 3)
 			{
 				// 三角メッシュ(triangles)のパターン(0, 1, 2 ...)を各point01 ~ 03に入れる。(頂点情報)
@@ -141,13 +130,13 @@ public class CutObject
 				// (各point01 ~ 03で構成されたtriangleの各Indexの座標がすべてcutPlaneの表または裏の場合)
 				if (sides[0] == sides[1] && sides[0] == sides[2])
 				{
-					//Debug.Log("point01 = " + point01);
-					//Debug.Log("point02 = " + point02);
-					//Debug.Log("point03 = " + point03);
+					Debug.Log("point01 = " + point01);
+					Debug.Log("point02 = " + point02);
+					Debug.Log("point03 = " + point03);
 
-					//Debug.Log("sides[0] = " + sides[0]);
-					//Debug.Log("sides[1] = " + sides[1]);
-					//Debug.Log("sides[2] = " + sides[2]);
+					Debug.Log("sides[0] = " + sides[0]);
+					Debug.Log("sides[1] = " + sides[1]);
+					Debug.Log("sides[2] = " + sides[2]);
 
 					if (sides[0])
 					{
@@ -204,10 +193,6 @@ public class CutObject
 		b_object.AddComponent<MeshCollider>();
 		b_object.GetComponent<MeshRenderer>().materials = materials;
 		b_object.GetComponent<MeshRenderer>().material.color = Color.green;
-
-
-		a_mesh.SetIndices(MakeIndices(a_mesh.triangles), MeshTopology.Lines, 0);
-		b_mesh.SetIndices(MakeIndices(b_mesh.triangles), MeshTopology.Lines, 0);
 
 		meshState = MeshState.Isolation;
 
@@ -461,16 +446,6 @@ public class CutObject
 		//	vertexOBJ.transform.parent = newVerticesOBJ.transform;
 
 		//}
-
-	}
-
-	void Start()
-	{
-
-	}
-
-	void Update()
-	{
 
 	}
 

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Linq;
 
 public class AttachFrame : MonoBehaviour
@@ -6,6 +7,7 @@ public class AttachFrame : MonoBehaviour
 	[SerializeField]
 	private GameObject cube;
 	private float collider_size = 0.06f;
+	private List<GameObject> obj = new List<GameObject>();
 
 	private static Vector3[] GetColliderSize(float size, Vector3[] vertices)
 	{
@@ -51,12 +53,14 @@ public class AttachFrame : MonoBehaviour
 	{
 		for (var i = 0; i < size.Length; i++)
 		{
-			var obj = new GameObject("BoxCollider[" + i + "]");
-			obj.transform.position = center[i];
-			obj.transform.rotation = angle[i];
-			obj.transform.parent = gameObject.transform;
 
-			var col = obj.AddComponent<BoxCollider>();
+			//var obj = new GameObject("BoxCollider[" + i + "]");
+			obj.Add(new GameObject());
+			obj[i].transform.position = center[i];
+			obj[i].transform.rotation = angle[i];
+			obj[i].transform.parent = gameObject.transform;
+
+			var col = obj[i].AddComponent<BoxCollider>();
 			col.size = size[i];
 		}
 	}
@@ -73,6 +77,19 @@ public class AttachFrame : MonoBehaviour
 
 	void Update()
 	{
+
+
+		if (CutObject.meshState == MeshState.Isolation)
+		{
+
+			for (var i = 0; i < obj.Count; i++)
+			{
+				Destroy(obj[i]);
+
+			}
+
+
+		}
 
 	}
 

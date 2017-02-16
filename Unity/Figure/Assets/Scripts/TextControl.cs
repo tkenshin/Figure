@@ -22,7 +22,7 @@ public class TextControl : MonoBehaviour {
 				instruction_text.text = "削除対象を選択";
 				break;
 				
-			case MeshState.Cut:
+			case MeshState.Cutted:
 				instruction_text.text = "切断完了";
 				break;
 				

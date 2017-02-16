@@ -57,12 +57,12 @@ public class SetCutPoints : MonoBehaviour
 				{
 					if (cutPoints[0].x != cutPoints[1].x && cutPoints[0].x != cutPoints[2].x)
 					{
-						GameObject[] cutObjects = CutObject.Cut(cube, material);
+						CutObject.Cut(cube, material);
 
 					}
 					else if (cutPoints[0].z != cutPoints[1].z && cutPoints[0].z != cutPoints[2].z)
 					{
-						GameObject[] cutObjects = CutObject.Cut(cube, material);
+						CutObject.Cut(cube, material);
 
 					}
 					else
@@ -74,7 +74,7 @@ public class SetCutPoints : MonoBehaviour
 				}
 				else
 				{
-					GameObject[] cutObjects = CutObject.Cut(cube, material);
+					CutObject.Cut(cube, material);
 				}
 
 				Destroy(cutPointObjects[0]);
@@ -117,7 +117,7 @@ public class SetCutPoints : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetMouseButtonUp(0))
+		if (Input.GetMouseButtonDown(0))
 		{
 
 			if (CutObject.meshState == MeshState.Isolation)
@@ -129,10 +129,10 @@ public class SetCutPoints : MonoBehaviour
 
 				if (Physics.Raycast(ray, out hit, 100000) && hit.collider.gameObject != null)
 				{
-
+					Debug.Log("collide object = " + hit.collider.gameObject);
 					Destroy(hit.collider.gameObject);
 
-					CutObject.meshState = MeshState.Cut;
+					CutObject.meshState = MeshState.Cutted;
 				}
 
 			}
