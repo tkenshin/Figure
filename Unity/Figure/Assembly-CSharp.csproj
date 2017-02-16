@@ -53,7 +53,6 @@
      <Compile Include="Assets\Scripts\SetCutPoints.cs" />
      <Compile Include="Assets\Scripts\TextControl.cs" />
      <None Include="Assets\Scripts\Shader\DoubleShader.shader" />
-     <None Include="Assets\Scripts\Shader\MakeLine.shader" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>

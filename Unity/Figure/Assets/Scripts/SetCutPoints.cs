@@ -116,7 +116,13 @@ public class SetCutPoints : MonoBehaviour
 
 				if (Physics.Raycast(ray, out hit, 100000) && hit.collider.gameObject != null)
 				{
-					Debug.Log("collide object = " + hit.collider.gameObject);
+
+					for (var i = 0; i < CutObject.cuttedOBJs.Count; i++)
+					{
+						CutObject.cuttedOBJs[i].GetComponent<MeshRenderer>().material.color = Color.white;
+
+					}
+
 					Destroy(hit.collider.gameObject);
 
 					CutObject.meshState = MeshState.Cutted;

@@ -14,6 +14,8 @@ public class CutObject
 
 	private static List<Vector3> newVertices = new List<Vector3>();
 
+	public static List<GameObject> cuttedOBJs = new List<GameObject>();
+
 	private class MeshGeneration
 	{
 		public List<Vector3> vertices = new List<Vector3>();
@@ -100,6 +102,7 @@ public class CutObject
 		targetMesh = target.GetComponent<MeshFilter>().mesh;
 
 		newVertices.Clear();
+		cuttedOBJs.Clear();
 
 		a_side.InitializeAll();
 		b_side.InitializeAll();
@@ -193,6 +196,9 @@ public class CutObject
 		b_object.AddComponent<MeshCollider>();
 		b_object.GetComponent<MeshRenderer>().materials = materials;
 		b_object.GetComponent<MeshRenderer>().material.color = Color.green;
+
+		cuttedOBJs.Add(a_object);
+		cuttedOBJs.Add(b_object);
 
 		meshState = MeshState.Isolation;
 
@@ -448,6 +454,5 @@ public class CutObject
 		//}
 
 	}
-
 
 }

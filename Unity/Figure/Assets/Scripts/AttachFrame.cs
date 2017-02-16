@@ -74,11 +74,8 @@ public class AttachFrame : MonoBehaviour
 		CreateColliders(GetColliderSize(collider_size, vertices), GetColliderCenter(cube.transform, vertices), GetColliderAngle());   // target collider
 	}
 
-
 	void Update()
 	{
-
-
 		if (CutObject.meshState == MeshState.Isolation)
 		{
 
@@ -87,7 +84,6 @@ public class AttachFrame : MonoBehaviour
 				Destroy(obj[i]);
 
 			}
-
 
 		}
 
